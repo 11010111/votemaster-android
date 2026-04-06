@@ -1,4 +1,4 @@
-package de.multiplebytes.votemaster
+package de.multiplebytes.votemaster.presentation.feature.navigation
 
 import kotlinx.serialization.Serializable
 

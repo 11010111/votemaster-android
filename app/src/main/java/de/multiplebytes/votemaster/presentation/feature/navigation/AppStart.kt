@@ -1,4 +1,4 @@
-package de.multiplebytes.votemaster
+package de.multiplebytes.votemaster.presentation.feature.navigation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,37 +27,41 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import de.multiplebytes.votemaster.core.di.appModule
 import de.multiplebytes.votemaster.presentation.feature.chat.ChatScreen
-import de.multiplebytes.votemaster.presentation.feature.profile.ProfileScreen
 import de.multiplebytes.votemaster.presentation.feature.location.LocationScreen
+import de.multiplebytes.votemaster.presentation.feature.profile.ProfileScreen
 import de.multiplebytes.votemaster.presentation.feature.vote.VoteScreen
 import de.multiplebytes.votemaster.presentation.feature.vote.VoteViewModel
 import de.multiplebytes.votemaster.presentation.theme.VoteMasterTheme
+import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.KoinApplication
+import org.koin.dsl.koinConfiguration
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppStart() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
+    val currentDestination = navBackStackEntry?.destination
 
-    val currentTitle = when (currentRoute) {
-        Route.Vote::class.qualifiedName -> Tab.Vote.title
-        Route.Location::class.qualifiedName -> Tab.Location.title
-        Route.Chat::class.qualifiedName -> Tab.Chat.title
-        Route.Profile::class.qualifiedName -> Tab.Profile.title
+    val currentTitle = when {
+        currentDestination?.hasRoute<Route.Vote>() == true -> Tab.Vote.title
+        currentDestination?.hasRoute<Route.Vote>() == true -> Tab.Location.title
+        currentDestination?.hasRoute<Route.Vote>() == true -> Tab.Chat.title
+        currentDestination?.hasRoute<Route.Vote>() == true -> Tab.Profile.title
         else -> "Vote Master"
     }
 
     val canNavigateBack = navController.previousBackStackEntry != null
     var selectedTab by rememberSaveable { mutableStateOf(Tab.Vote) }
 
-    val voteViewModel: VoteViewModel = viewModel()
+    val voteViewModel: VoteViewModel = koinViewModel()
 
     val uiState by voteViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -82,7 +86,7 @@ fun AppStart() {
                     }
                 },
                 actions = {
-                    if (currentRoute == Route.Vote::class.qualifiedName) {
+                    if (currentDestination?.hasRoute<Route.Vote>() == true) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(2.dp)
@@ -161,10 +165,18 @@ fun AppStart() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun AppStartPreview() {
-    VoteMasterTheme {
-        AppStart()
+    KoinApplication(
+        configuration = koinConfiguration(
+            declaration = {
+                modules(appModule)
+            }
+        )
+    ) {
+        VoteMasterTheme {
+            AppStart()
+        }
     }
 }
