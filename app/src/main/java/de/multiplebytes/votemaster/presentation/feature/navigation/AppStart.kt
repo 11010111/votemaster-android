@@ -52,9 +52,9 @@ fun AppStart() {
 
     val currentTitle = when {
         currentDestination?.hasRoute<Route.Vote>() == true -> Tab.Vote.title
-        currentDestination?.hasRoute<Route.Vote>() == true -> Tab.Location.title
-        currentDestination?.hasRoute<Route.Vote>() == true -> Tab.Chat.title
-        currentDestination?.hasRoute<Route.Vote>() == true -> Tab.Profile.title
+        currentDestination?.hasRoute<Route.Location>() == true -> Tab.Location.title
+        currentDestination?.hasRoute<Route.Chat>() == true -> Tab.Chat.title
+        currentDestination?.hasRoute<Route.Profile>() == true -> Tab.Profile.title
         else -> "Vote Master"
     }
 
