@@ -17,11 +17,10 @@ import androidx.compose.material.icons.rounded.ChatBubble
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material.icons.rounded.Refresh
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,7 +40,6 @@ import coil3.compose.SubcomposeAsyncImage
 import de.multiplebytes.votemaster.domain.model.Vote
 import de.multiplebytes.votemaster.presentation.theme.VoteMasterTheme
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun VoteSuccess(
     modifier: Modifier = Modifier,
@@ -100,7 +98,7 @@ fun VoteSuccess(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        LoadingIndicator(modifier = Modifier.size(44.dp))
+                        CircularProgressIndicator()
                     }
                 },
                 error = {
