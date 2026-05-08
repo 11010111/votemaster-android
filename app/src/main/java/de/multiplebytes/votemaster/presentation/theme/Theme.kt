@@ -9,6 +9,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.PreviewWrapperProvider
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -107,4 +108,13 @@ fun VoteMasterTheme(
         typography = AppTypography,
         content = content
     )
+}
+
+class ThemePreview : PreviewWrapperProvider {
+    @Composable
+    override fun Wrap(content: @Composable (() -> Unit)) {
+        VoteMasterTheme {
+            content()
+        }
+    }
 }

@@ -7,3 +7,13 @@ sealed interface VoteUiState {
     data class Success(val vote: Vote) : VoteUiState
     data class Failure(val message: String) : VoteUiState
 }
+
+data class VoteContract(
+    val credits: Int = 0,
+    val voteUiState: VoteUiState = VoteUiState.Loading
+)
+
+sealed interface VoteIntent {
+    data object Inkrement : VoteIntent
+    data object Refresh : VoteIntent
+}

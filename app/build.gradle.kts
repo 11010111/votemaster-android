@@ -1,3 +1,12 @@
+import java.util.Properties
+
+val properties = Properties()
+val propertiesFile = rootProject.file("secret.properties")
+
+if (propertiesFile.exists()) {
+    properties.load(propertiesFile.inputStream())
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -20,6 +29,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "SUPABASE_URL", "\"${properties.getProperty("SUPABASE_URL") ?: ""}\"")
+        buildConfigField("String", "SUPABASE_KEY", "\"${properties.getProperty("SUPABASE_KEY") ?: ""}\"")
     }
     buildTypes {
         release {

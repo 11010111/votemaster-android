@@ -7,7 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import de.multiplebytes.votemaster.presentation.theme.VoteMasterTheme
+import androidx.compose.ui.tooling.preview.PreviewWrapper
+import de.multiplebytes.votemaster.presentation.theme.ThemePreview
 
 @Composable
 fun LocationScreen(
@@ -21,10 +22,9 @@ fun LocationScreen(
     }
 }
 
+@PreviewWrapper(ThemePreview::class)
 @Preview(showBackground = true)
 @Composable
 private fun LocationScreenPreview() {
-    VoteMasterTheme {
-        LocationScreen()
-    }
+    LocationScreen()
 }

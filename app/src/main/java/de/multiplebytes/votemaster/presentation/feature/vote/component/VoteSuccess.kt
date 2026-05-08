@@ -35,10 +35,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import de.multiplebytes.votemaster.domain.model.Vote
-import de.multiplebytes.votemaster.presentation.theme.VoteMasterTheme
+import de.multiplebytes.votemaster.presentation.theme.ThemePreview
 
 @Composable
 fun VoteSuccess(
@@ -210,19 +211,18 @@ fun VoteSuccess(
     }
 }
 
+@PreviewWrapper(ThemePreview::class)
 @Preview(showBackground = true)
 @Composable
 private fun VoteSuccessPreview() {
-    VoteMasterTheme {
-        VoteSuccess(
-            vote = Vote(
-                image = "https://picsum.photos/402/878?random=1",
-                label = "Preview",
-                location = "Earth"
-            ),
-            onDislike = {},
-            onChat = {},
-            onLike = {}
-        )
-    }
+    VoteSuccess(
+        vote = Vote(
+            image = "https://picsum.photos/402/878?random=1",
+            label = "Preview",
+            location = "Earth"
+        ),
+        onDislike = {},
+        onChat = {},
+        onLike = {}
+    )
 }

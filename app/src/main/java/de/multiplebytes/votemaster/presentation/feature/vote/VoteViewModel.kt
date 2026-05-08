@@ -10,14 +10,27 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class VoteViewModel : ViewModel() {
-    private val _uiState = MutableStateFlow(VoteCreditUiState())
+    private val _uiState = MutableStateFlow(VoteContract())
     val uiState = _uiState.asStateFlow()
 
     init {
         loadVote()
     }
 
-    fun loadVote() {
+    fun onContract(intent: VoteIntent) {
+        when (intent) {
+            is VoteIntent.Inkrement -> {
+                incrementPoints()
+                loadVote()
+            }
+
+            is VoteIntent.Refresh -> {
+                loadVote()
+            }
+        }
+    }
+
+    private fun loadVote() {
         viewModelScope.launch {
             try {
                 _uiState.update { currentState ->
@@ -48,7 +61,7 @@ class VoteViewModel : ViewModel() {
         }
     }
 
-    fun incrementPoints() {
+    private fun incrementPoints() {
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(

@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -36,16 +37,19 @@ import de.multiplebytes.votemaster.core.di.appModule
 import de.multiplebytes.votemaster.presentation.feature.chat.ChatScreen
 import de.multiplebytes.votemaster.presentation.feature.location.LocationScreen
 import de.multiplebytes.votemaster.presentation.feature.profile.ProfileScreen
+import de.multiplebytes.votemaster.presentation.feature.vote.VoteIntent
 import de.multiplebytes.votemaster.presentation.feature.vote.VoteScreen
 import de.multiplebytes.votemaster.presentation.feature.vote.VoteViewModel
-import de.multiplebytes.votemaster.presentation.theme.VoteMasterTheme
+import de.multiplebytes.votemaster.presentation.theme.ThemePreview
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinApplication
 import org.koin.dsl.koinConfiguration
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppStart() {
+fun AppStart(
+    onSignOutClick: () -> Unit
+) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -136,13 +140,15 @@ fun AppStart() {
                     modifier = Modifier.padding(innerPadding),
                     voteUiState = uiState.voteUiState,
                     onDislike = {
-                        voteViewModel.incrementPoints()
-                        voteViewModel.loadVote()
+                        voteViewModel.onContract(
+                            intent = VoteIntent.Inkrement
+                        )
                     },
                     onChat = {},
                     onLike = {
-                        voteViewModel.incrementPoints()
-                        voteViewModel.loadVote()
+                        voteViewModel.onContract(
+                            intent = VoteIntent.Inkrement
+                        )
                     },
                 )
             }
@@ -158,13 +164,15 @@ fun AppStart() {
             }
             composable<Route.Profile> {
                 ProfileScreen(
-                    modifier = Modifier.padding(innerPadding)
+                    modifier = Modifier.padding(innerPadding),
+                    onSignOutClick = onSignOutClick
                 )
             }
         }
     }
 }
 
+@PreviewWrapper(ThemePreview::class)
 @Preview(showBackground = true)
 @Composable
 private fun AppStartPreview() {
@@ -175,8 +183,8 @@ private fun AppStartPreview() {
             }
         )
     ) {
-        VoteMasterTheme {
-            AppStart()
-        }
+        AppStart(
+            onSignOutClick = {}
+        )
     }
 }

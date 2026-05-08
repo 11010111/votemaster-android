@@ -6,8 +6,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import de.multiplebytes.votemaster.presentation.common.Loading
+import de.multiplebytes.votemaster.presentation.feature.auth.AuthIntent
+import de.multiplebytes.votemaster.presentation.feature.auth.AuthScreen
+import de.multiplebytes.votemaster.presentation.feature.auth.AuthViewModel
 import de.multiplebytes.votemaster.presentation.feature.navigation.AppStart
 import de.multiplebytes.votemaster.presentation.theme.VoteMasterTheme
+import io.github.jan.supabase.auth.status.SessionStatus
+import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
@@ -18,7 +26,48 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             VoteMasterTheme {
-                AppStart()
+                val authViewModel: AuthViewModel = koinViewModel()
+                val uiState by authViewModel.uiState.collectAsStateWithLifecycle()
+
+                when (uiState.sessionStatus) {
+                    is SessionStatus.Initializing -> {
+                        Loading()
+                    }
+
+                    is SessionStatus.NotAuthenticated -> {
+                        AuthScreen(
+                            uiState = uiState,
+                            onSignInClick = { email, password ->
+                                authViewModel.onContract(
+                                    intent = AuthIntent.SignIn(
+                                        email = email,
+                                        password = password
+                                    )
+                                )
+                            },
+                            onSignUpClick = { email, password ->
+                                authViewModel.onContract(
+                                    intent = AuthIntent.SignUp(
+                                        email = email,
+                                        password = password
+                                    )
+                                )
+                            }
+                        )
+                    }
+
+                    is SessionStatus.Authenticated -> {
+                        AppStart(
+                            onSignOutClick = {
+                                authViewModel.onContract(
+                                    intent = AuthIntent.SignOut
+                                )
+                            }
+                        )
+                    }
+
+                    is SessionStatus.RefreshFailure -> {}
+                }
             }
         }
     }
