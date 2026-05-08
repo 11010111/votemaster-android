@@ -53,7 +53,7 @@ fun EmailStep(
             tint = MaterialTheme.colorScheme.secondary
         )
 
-        Text(text = "Enter your E-Mail")
+        Text(text = "Enter your email address.")
 
         TextField(
             value = emailValue,
@@ -65,7 +65,7 @@ fun EmailStep(
             isError = emailValue.isNotEmpty() && !isValidEmail,
             supportingText = {
                 if (emailValue.isNotEmpty() && !isValidEmail) {
-                    Text(text = "Invalid E-Mail Address")
+                    Text(text = "Invalid email address")
                 }
             },
             singleLine = true

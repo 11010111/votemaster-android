@@ -77,7 +77,7 @@ fun SignInContent(
                 isError = emailValue.isNotEmpty() && !isValidEmail,
                 supportingText = {
                     if (emailValue.isNotEmpty() && !isValidEmail) {
-                        Text(text = "Invalid E-Mail Address")
+                        Text(text = "Invalid email address")
                     }
                 },
                 singleLine = true
@@ -94,6 +94,7 @@ fun SignInContent(
                 keyboardActions = KeyboardActions(
                     onDone = { onSignInClick(emailValue, passwordValue) }
                 ),
+                isError = passwordValue.isNotEmpty() && passwordValue.length < 6,
                 singleLine = true
             )
         }
@@ -118,7 +119,7 @@ fun SignInContent(
             }
 
             TextButton(onClick = onSignUpClick) {
-                Text(text = "Sign up here")
+                Text(text = "No account yet? Sign up here.")
             }
         }
     }
@@ -129,9 +130,7 @@ fun SignInContent(
 @Composable
 private fun SignInContentPreview() {
     SignInContent(
-        uiState = AuthUiState(
-            errorMessage = null
-        ),
+        uiState = AuthUiState(),
         onSignInClick = { _, _ -> },
         onSignUpClick = {}
     )

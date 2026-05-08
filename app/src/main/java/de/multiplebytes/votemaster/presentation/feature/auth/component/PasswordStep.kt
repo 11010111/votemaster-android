@@ -56,7 +56,7 @@ fun PasswordStep(
             tint = MaterialTheme.colorScheme.secondary
         )
 
-        Text(text = "Enter your password")
+        Text(text = "Enter your password.")
 
         Column(
             modifier = modifier.fillMaxWidth(),
@@ -75,7 +75,7 @@ fun PasswordStep(
                 isError = passwordValue.isNotEmpty() && passwordValue.length < 6,
                 supportingText = {
                     if (passwordValue.isNotEmpty() && passwordValue.length < 6) {
-                        Text(text = "Password must be greater than 6 characters")
+                        Text(text = "The password must be at least 6 characters long.")
                     }
                 },
                 singleLine = true
@@ -84,7 +84,7 @@ fun PasswordStep(
             TextField(
                 value = confirmValue,
                 onValueChange = { confirmValue = it },
-                label = { Text(text = "Confirm Password") },
+                label = { Text(text = "Confirm password") },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
@@ -92,7 +92,7 @@ fun PasswordStep(
                 isError = passwordValue != confirmValue,
                 supportingText = {
                     if (confirmValue.isNotEmpty() && passwordValue != confirmValue) {
-                        Text(text = "Confirmation failed")
+                        Text(text = "Passwords do not match.")
                     }
                 },
                 singleLine = true
@@ -123,9 +123,7 @@ fun PasswordStep(
 @Composable
 private fun PasswordStepPreview() {
     PasswordStep(
-        uiState = AuthUiState(
-            errorMessage = "Unknown error"
-        ),
+        uiState = AuthUiState(),
         onSignUpClick = {}
     )
 }

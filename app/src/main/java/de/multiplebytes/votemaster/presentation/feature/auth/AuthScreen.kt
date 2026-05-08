@@ -41,7 +41,7 @@ fun AuthScreen(
 
     val title = when {
         currentDestination?.hasRoute<AuthRoute.SignIn>() == true -> "Sign In"
-        else -> "Sign up"
+        else -> "Sign Up"
     }
 
     Scaffold(
