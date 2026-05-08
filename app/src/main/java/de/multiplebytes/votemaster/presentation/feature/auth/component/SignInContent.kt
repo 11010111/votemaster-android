@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -52,6 +53,7 @@ fun SignInContent(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .padding(horizontal = 16.dp)
             .imePadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(30.dp, Alignment.CenterVertically)
@@ -128,7 +130,7 @@ fun SignInContent(
 private fun SignInContentPreview() {
     SignInContent(
         uiState = AuthUiState(
-            errorMessage = "Unknown error"
+            errorMessage = null
         ),
         onSignInClick = { _, _ -> },
         onSignUpClick = {}
