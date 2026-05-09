@@ -21,7 +21,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import de.multiplebytes.votemaster.presentation.feature.auth.component.SignInContent
+import de.multiplebytes.votemaster.presentation.feature.auth.component.SignIn
 import de.multiplebytes.votemaster.presentation.feature.auth.component.EmailStep
 import de.multiplebytes.votemaster.presentation.feature.auth.component.PasswordStep
 import de.multiplebytes.votemaster.presentation.theme.ThemePreview
@@ -72,7 +72,7 @@ fun AuthScreen(
             startDestination = AuthRoute.SignIn
         ) {
             composable<AuthRoute.SignIn> {
-                SignInContent(
+                SignIn(
                     uiState = uiState,
                     onSignInClick = onSignInClick,
                     onSignUpClick = {

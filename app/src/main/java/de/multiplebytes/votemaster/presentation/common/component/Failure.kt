@@ -1,4 +1,4 @@
-package de.multiplebytes.votemaster.presentation.common
+package de.multiplebytes.votemaster.presentation.common.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

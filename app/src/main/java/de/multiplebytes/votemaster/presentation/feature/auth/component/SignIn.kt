@@ -35,7 +35,7 @@ import de.multiplebytes.votemaster.presentation.feature.auth.AuthUiState
 import de.multiplebytes.votemaster.presentation.theme.ThemePreview
 
 @Composable
-fun SignInContent(
+fun SignIn(
     modifier: Modifier = Modifier,
     uiState: AuthUiState,
     onSignInClick: (String, String) -> Unit,
@@ -128,8 +128,8 @@ fun SignInContent(
 @PreviewWrapper(ThemePreview::class)
 @Preview(showBackground = true)
 @Composable
-private fun SignInContentPreview() {
-    SignInContent(
+private fun SignInPreview() {
+    SignIn(
         uiState = AuthUiState(),
         onSignInClick = { _, _ -> },
         onSignUpClick = {}

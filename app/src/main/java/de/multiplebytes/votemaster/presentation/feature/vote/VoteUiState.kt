@@ -1,0 +1,19 @@
+package de.multiplebytes.votemaster.presentation.feature.vote
+
+import de.multiplebytes.votemaster.domain.model.Vote
+
+sealed interface VoteStatus {
+    data object Loading : VoteStatus
+    data class Success(val vote: Vote) : VoteStatus
+    data class Failure(val message: String) : VoteStatus
+}
+
+data class VoteUiState(
+    val credits: Int = 0,
+    val voteStatus: VoteStatus = VoteStatus.Loading
+)
+
+sealed interface VoteIntent {
+    data object Inkrement : VoteIntent
+    data object Refresh : VoteIntent
+}

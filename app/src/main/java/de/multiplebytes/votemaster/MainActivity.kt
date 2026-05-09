@@ -8,11 +8,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import de.multiplebytes.votemaster.presentation.common.Loading
+import de.multiplebytes.votemaster.presentation.common.BaseScreen
+import de.multiplebytes.votemaster.presentation.common.component.Loading
 import de.multiplebytes.votemaster.presentation.feature.auth.AuthIntent
 import de.multiplebytes.votemaster.presentation.feature.auth.AuthScreen
 import de.multiplebytes.votemaster.presentation.feature.auth.AuthViewModel
-import de.multiplebytes.votemaster.presentation.feature.navigation.AppStart
 import de.multiplebytes.votemaster.presentation.theme.VoteMasterTheme
 import io.github.jan.supabase.auth.status.SessionStatus
 import org.koin.androidx.compose.koinViewModel
@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
                         AuthScreen(
                             uiState = uiState,
                             onSignInClick = { email, password ->
-                                authViewModel.onContract(
+                                authViewModel.onIntent(
                                     intent = AuthIntent.SignIn(
                                         email = email,
                                         password = password
@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             },
                             onSignUpClick = { email, password ->
-                                authViewModel.onContract(
+                                authViewModel.onIntent(
                                     intent = AuthIntent.SignUp(
                                         email = email,
                                         password = password
@@ -57,9 +57,9 @@ class MainActivity : ComponentActivity() {
                     }
 
                     is SessionStatus.Authenticated -> {
-                        AppStart(
+                        BaseScreen(
                             onSignOutClick = {
-                                authViewModel.onContract(
+                                authViewModel.onIntent(
                                     intent = AuthIntent.SignOut
                                 )
                             }

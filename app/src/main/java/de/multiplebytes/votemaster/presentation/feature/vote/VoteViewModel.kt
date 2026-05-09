@@ -3,21 +3,22 @@ package de.multiplebytes.votemaster.presentation.feature.vote
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.multiplebytes.votemaster.domain.model.Vote
+import de.multiplebytes.votemaster.presentation.common.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-class VoteViewModel : ViewModel() {
-    private val _uiState = MutableStateFlow(VoteContract())
-    val uiState = _uiState.asStateFlow()
+class VoteViewModel : ViewModel(), BaseViewModel<VoteUiState, VoteIntent> {
+    private val _uiState = MutableStateFlow(VoteUiState())
+    override val uiState = _uiState.asStateFlow()
 
     init {
         loadVote()
     }
 
-    fun onContract(intent: VoteIntent) {
+    override fun onIntent(intent: VoteIntent) {
         when (intent) {
             is VoteIntent.Inkrement -> {
                 incrementPoints()
@@ -35,7 +36,7 @@ class VoteViewModel : ViewModel() {
             try {
                 _uiState.update { currentState ->
                     currentState.copy(
-                        voteUiState = VoteUiState.Success(
+                        voteStatus = VoteStatus.Success(
                             vote = Vote(
                                 image = "https://picsum.photos/402/878?random=${
                                     Random.nextInt(
@@ -52,7 +53,7 @@ class VoteViewModel : ViewModel() {
             } catch (e: Exception) {
                 _uiState.update { currentState ->
                     currentState.copy(
-                        voteUiState = VoteUiState.Failure(
+                        voteStatus = VoteStatus.Failure(
                             message = e.message ?: "Unknown error"
                         )
                     )

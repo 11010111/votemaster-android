@@ -6,6 +6,7 @@ import de.multiplebytes.votemaster.domain.usecase.auth.SessionStatusUseCase
 import de.multiplebytes.votemaster.domain.usecase.auth.SignInUseCase
 import de.multiplebytes.votemaster.domain.usecase.auth.SignOutUseCase
 import de.multiplebytes.votemaster.domain.usecase.auth.SignUpUseCase
+import de.multiplebytes.votemaster.presentation.common.BaseViewModel
 import io.github.jan.supabase.exceptions.RestException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,9 +21,9 @@ class AuthViewModel(
     private val signInUseCase: SignInUseCase,
     private val signUpUseCase: SignUpUseCase,
     private val signOutUseCase: SignOutUseCase
-) : ViewModel() {
+) : ViewModel(), BaseViewModel<AuthUiState, AuthIntent> {
     private val _uiState = MutableStateFlow(AuthUiState())
-    val uiState: StateFlow<AuthUiState> = combine(
+    override val uiState: StateFlow<AuthUiState> = combine(
         _uiState,
         sessionStatusUseCase()
     ) { uiState, sessionStatus ->
@@ -34,7 +35,7 @@ class AuthViewModel(
             initialValue = AuthUiState()
         )
 
-    fun onContract(intent: AuthIntent) {
+    override fun onIntent(intent: AuthIntent) {
         when (intent) {
             is AuthIntent.SignIn -> {
                 signIn(email = intent.email, password = intent.password)

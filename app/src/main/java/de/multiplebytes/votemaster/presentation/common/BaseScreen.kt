@@ -1,4 +1,4 @@
-package de.multiplebytes.votemaster.presentation.feature.navigation
+package de.multiplebytes.votemaster.presentation.common
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -47,7 +47,7 @@ import org.koin.dsl.koinConfiguration
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppStart(
+fun BaseScreen(
     onSignOutClick: () -> Unit
 ) {
     val navController = rememberNavController()
@@ -55,15 +55,15 @@ fun AppStart(
     val currentDestination = navBackStackEntry?.destination
 
     val currentTitle = when {
-        currentDestination?.hasRoute<Route.Vote>() == true -> Tab.Vote.title
-        currentDestination?.hasRoute<Route.Location>() == true -> Tab.Location.title
-        currentDestination?.hasRoute<Route.Chat>() == true -> Tab.Chat.title
-        currentDestination?.hasRoute<Route.Profile>() == true -> Tab.Profile.title
+        currentDestination?.hasRoute<BaseRoute.Vote>() == true -> BaseTab.Vote.title
+        currentDestination?.hasRoute<BaseRoute.Location>() == true -> BaseTab.Location.title
+        currentDestination?.hasRoute<BaseRoute.Chat>() == true -> BaseTab.Chat.title
+        currentDestination?.hasRoute<BaseRoute.Profile>() == true -> BaseTab.Profile.title
         else -> "Vote Master"
     }
 
     val canNavigateBack = navController.previousBackStackEntry != null
-    var selectedTab by rememberSaveable { mutableStateOf(Tab.Vote) }
+    var selectedTab by rememberSaveable { mutableStateOf(BaseTab.Vote) }
 
     val voteViewModel: VoteViewModel = koinViewModel()
 
@@ -90,7 +90,7 @@ fun AppStart(
                     }
                 },
                 actions = {
-                    if (currentDestination?.hasRoute<Route.Vote>() == true) {
+                    if (currentDestination?.hasRoute<BaseRoute.Vote>() == true) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(2.dp)
@@ -115,7 +115,7 @@ fun AppStart(
         },
         bottomBar = {
             BottomAppBar {
-                Tab.entries.forEach { tabItem ->
+                BaseTab.entries.forEach { tabItem ->
                     NavigationBarItem(
                         selected = selectedTab == tabItem,
                         onClick = { selectedTab = tabItem },
@@ -135,34 +135,34 @@ fun AppStart(
             navController = navController,
             startDestination = selectedTab.route
         ) {
-            composable<Route.Vote> {
+            composable<BaseRoute.Vote> {
                 VoteScreen(
                     modifier = Modifier.padding(innerPadding),
-                    voteUiState = uiState.voteUiState,
+                    uiState = uiState,
                     onDislike = {
-                        voteViewModel.onContract(
+                        voteViewModel.onIntent(
                             intent = VoteIntent.Inkrement
                         )
                     },
                     onChat = {},
                     onLike = {
-                        voteViewModel.onContract(
+                        voteViewModel.onIntent(
                             intent = VoteIntent.Inkrement
                         )
                     },
                 )
             }
-            composable<Route.Location> {
+            composable<BaseRoute.Location> {
                 LocationScreen(
                     modifier = Modifier.padding(innerPadding)
                 )
             }
-            composable<Route.Chat> {
+            composable<BaseRoute.Chat> {
                 ChatScreen(
                     modifier = Modifier.padding(innerPadding)
                 )
             }
-            composable<Route.Profile> {
+            composable<BaseRoute.Profile> {
                 ProfileScreen(
                     modifier = Modifier.padding(innerPadding),
                     onSignOutClick = onSignOutClick
@@ -175,7 +175,7 @@ fun AppStart(
 @PreviewWrapper(ThemePreview::class)
 @Preview(showBackground = true)
 @Composable
-private fun AppStartPreview() {
+private fun BaseScreenPreview() {
     KoinApplication(
         configuration = koinConfiguration(
             declaration = {
@@ -183,7 +183,7 @@ private fun AppStartPreview() {
             }
         )
     ) {
-        AppStart(
+        BaseScreen(
             onSignOutClick = {}
         )
     }

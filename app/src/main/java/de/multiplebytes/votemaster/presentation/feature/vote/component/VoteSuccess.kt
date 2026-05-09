@@ -111,7 +111,7 @@ fun VoteSuccess(
                             modifier = Modifier.size(128.dp),
                             imageVector = Icons.Rounded.BrokenImage,
                             contentDescription = "Error on load",
-                            tint = MaterialTheme.colorScheme.error
+                            tint = MaterialTheme.colorScheme.secondary
                         )
                     }
                 },
