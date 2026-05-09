@@ -7,7 +7,7 @@ sealed interface BaseRoute {
     data object Vote : BaseRoute
 
     @Serializable
-    data object Location : BaseRoute
+    data object Ranking : BaseRoute
 
     @Serializable
     data object Chat : BaseRoute

@@ -24,8 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -33,17 +31,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import de.multiplebytes.votemaster.core.di.appModule
 import de.multiplebytes.votemaster.presentation.feature.chat.ChatScreen
-import de.multiplebytes.votemaster.presentation.feature.location.LocationScreen
 import de.multiplebytes.votemaster.presentation.feature.profile.ProfileScreen
+import de.multiplebytes.votemaster.presentation.feature.ranking.RankingScreen
 import de.multiplebytes.votemaster.presentation.feature.vote.VoteIntent
 import de.multiplebytes.votemaster.presentation.feature.vote.VoteScreen
 import de.multiplebytes.votemaster.presentation.feature.vote.VoteViewModel
-import de.multiplebytes.votemaster.presentation.theme.ThemePreview
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.KoinApplication
-import org.koin.dsl.koinConfiguration
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,7 +50,7 @@ fun BaseScreen(
 
     val currentTitle = when {
         currentDestination?.hasRoute<BaseRoute.Vote>() == true -> BaseTab.Vote.title
-        currentDestination?.hasRoute<BaseRoute.Location>() == true -> BaseTab.Location.title
+        currentDestination?.hasRoute<BaseRoute.Ranking>() == true -> BaseTab.Ranking.title
         currentDestination?.hasRoute<BaseRoute.Chat>() == true -> BaseTab.Chat.title
         currentDestination?.hasRoute<BaseRoute.Profile>() == true -> BaseTab.Profile.title
         else -> "Vote Master"
@@ -66,7 +60,6 @@ fun BaseScreen(
     var selectedTab by rememberSaveable { mutableStateOf(BaseTab.Vote) }
 
     val voteViewModel: VoteViewModel = koinViewModel()
-
     val uiState by voteViewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
@@ -139,21 +132,21 @@ fun BaseScreen(
                 VoteScreen(
                     modifier = Modifier.padding(innerPadding),
                     uiState = uiState,
-                    onDislike = {
+                    onDislike = { id ->
                         voteViewModel.onIntent(
-                            intent = VoteIntent.Inkrement
+                            intent = VoteIntent.Inkrement(id = id)
                         )
                     },
                     onChat = {},
-                    onLike = {
+                    onLike = { id ->
                         voteViewModel.onIntent(
-                            intent = VoteIntent.Inkrement
+                            intent = VoteIntent.Inkrement(id = id)
                         )
                     },
                 )
             }
-            composable<BaseRoute.Location> {
-                LocationScreen(
+            composable<BaseRoute.Ranking> {
+                RankingScreen(
                     modifier = Modifier.padding(innerPadding)
                 )
             }
@@ -169,22 +162,5 @@ fun BaseScreen(
                 )
             }
         }
-    }
-}
-
-@PreviewWrapper(ThemePreview::class)
-@Preview(showBackground = true)
-@Composable
-private fun BaseScreenPreview() {
-    KoinApplication(
-        configuration = koinConfiguration(
-            declaration = {
-                modules(appModule)
-            }
-        )
-    ) {
-        BaseScreen(
-            onSignOutClick = {}
-        )
     }
 }

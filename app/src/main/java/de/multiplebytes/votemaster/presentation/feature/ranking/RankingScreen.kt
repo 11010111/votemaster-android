@@ -1,4 +1,4 @@
-package de.multiplebytes.votemaster.presentation.feature.location
+package de.multiplebytes.votemaster.presentation.feature.ranking
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,20 +11,20 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import de.multiplebytes.votemaster.presentation.theme.ThemePreview
 
 @Composable
-fun LocationScreen(
+fun RankingScreen(
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "Location")
+        Text(text = "Ranking")
     }
 }
 
 @PreviewWrapper(ThemePreview::class)
 @Preview(showBackground = true)
 @Composable
-private fun LocationScreenPreview() {
-    LocationScreen()
+private fun RankingScreenPreview() {
+    RankingScreen()
 }

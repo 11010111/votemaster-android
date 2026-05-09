@@ -4,7 +4,7 @@ import de.multiplebytes.votemaster.domain.model.Vote
 
 sealed interface VoteStatus {
     data object Loading : VoteStatus
-    data class Success(val vote: Vote) : VoteStatus
+    data class Success(val vote: Vote?) : VoteStatus
     data class Failure(val message: String) : VoteStatus
 }
 
@@ -14,6 +14,6 @@ data class VoteUiState(
 )
 
 sealed interface VoteIntent {
-    data object Inkrement : VoteIntent
+    data class Inkrement(val id: String) : VoteIntent
     data object Refresh : VoteIntent
 }

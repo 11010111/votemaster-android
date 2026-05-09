@@ -1,10 +1,20 @@
 package de.multiplebytes.votemaster.presentation.feature.vote
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.DoneAll
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapper
+import androidx.compose.ui.unit.dp
 import de.multiplebytes.votemaster.domain.model.Vote
+import de.multiplebytes.votemaster.domain.model.VoteImage
 import de.multiplebytes.votemaster.presentation.common.component.Failure
 import de.multiplebytes.votemaster.presentation.common.component.Loading
 import de.multiplebytes.votemaster.presentation.feature.vote.component.VoteSuccess
@@ -14,20 +24,36 @@ import de.multiplebytes.votemaster.presentation.theme.ThemePreview
 fun VoteScreen(
     modifier: Modifier = Modifier,
     uiState: VoteUiState,
-    onDislike: () -> Unit,
+    onDislike: (String) -> Unit,
     onChat: () -> Unit,
-    onLike: () -> Unit,
+    onLike: (String) -> Unit,
 ) {
     when (val currentState = uiState.voteStatus) {
         is VoteStatus.Loading -> Loading(modifier = modifier)
 
-        is VoteStatus.Success -> VoteSuccess(
-            modifier = modifier,
-            vote = currentState.vote,
-            onLike = onLike,
-            onChat = onChat,
-            onDislike = onDislike
-        )
+        is VoteStatus.Success -> {
+            if (currentState.vote != null) {
+                VoteSuccess(
+                    modifier = modifier,
+                    vote = currentState.vote,
+                    onLike = onLike,
+                    onChat = onChat,
+                    onDislike = onDislike
+                )
+            } else {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        modifier = Modifier.size(48.dp),
+                        imageVector = Icons.Rounded.DoneAll,
+                        contentDescription = "Done",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+        }
 
         is VoteStatus.Failure -> Failure(
             modifier = modifier,
@@ -61,9 +87,12 @@ private fun VoteScreenSuccessPreview() {
         uiState = VoteUiState(
             voteStatus = VoteStatus.Success(
                 vote = Vote(
-                    image = "https://picsum.photos/402/878?random=1",
-                    label = "Preview",
-                    location = "Earth"
+                    displayName = "Preview",
+                    images = listOf(
+                        VoteImage(
+                            imageUrl = "https://picsum.photos/402/878?random=1"
+                        )
+                    )
                 )
             )
         ),

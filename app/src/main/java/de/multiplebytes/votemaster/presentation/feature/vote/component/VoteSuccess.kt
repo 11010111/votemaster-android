@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BrokenImage
 import androidx.compose.material.icons.rounded.ChatBubble
 import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledIconButton
@@ -31,7 +30,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,15 +37,16 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import de.multiplebytes.votemaster.domain.model.Vote
+import de.multiplebytes.votemaster.domain.model.VoteImage
 import de.multiplebytes.votemaster.presentation.theme.ThemePreview
 
 @Composable
 fun VoteSuccess(
     modifier: Modifier = Modifier,
     vote: Vote,
-    onDislike: () -> Unit,
+    onDislike: (String) -> Unit,
     onChat: () -> Unit,
-    onLike: () -> Unit,
+    onLike: (String) -> Unit,
 ) {
     var loading by rememberSaveable { mutableStateOf(false) }
 
@@ -59,66 +58,41 @@ fun VoteSuccess(
             .padding(16.dp),
         contentAlignment = Alignment.BottomStart
     ) {
-        if (vote.image.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                MaterialTheme.colorScheme.surface,
-                                MaterialTheme.colorScheme.surfaceContainer
-                            )
-                        ),
-                        shape = roundedCorner
-                    )
-                    .clip(shape = roundedCorner),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    modifier = Modifier.size(128.dp),
-                    imageVector = Icons.Rounded.Image,
-                    contentDescription = "No Profile Image",
-                    tint = MaterialTheme.colorScheme.primary
+        SubcomposeAsyncImage(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceContainer,
+                    shape = roundedCorner
                 )
-            }
-        } else {
-            SubcomposeAsyncImage(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        color = MaterialTheme.colorScheme.surfaceContainer,
-                        shape = roundedCorner
+                .clip(shape = roundedCorner),
+            model = vote.images.first().imageUrl,
+            contentDescription = vote.displayName,
+            contentScale = ContentScale.Crop,
+            loading = {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            },
+            error = {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        modifier = Modifier.size(128.dp),
+                        imageVector = Icons.Rounded.BrokenImage,
+                        contentDescription = "Error on load",
+                        tint = MaterialTheme.colorScheme.secondary
                     )
-                    .clip(shape = roundedCorner),
-                model = vote.image,
-                contentDescription = vote.label,
-                contentScale = ContentScale.Crop,
-                loading = {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                },
-                error = {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(128.dp),
-                            imageVector = Icons.Rounded.BrokenImage,
-                            contentDescription = "Error on load",
-                            tint = MaterialTheme.colorScheme.secondary
-                        )
-                    }
-                },
-                onLoading = { loading = false },
-                onSuccess = { loading = true }
-            )
-        }
+                }
+            },
+            onLoading = { loading = false },
+            onSuccess = { loading = true }
+        )
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -139,17 +113,19 @@ fun VoteSuccess(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = vote.label,
+                    text = vote.displayName,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1
                 )
 
-                Text(
-                    text = vote.location,
-                    style = MaterialTheme.typography.bodySmall,
-                    maxLines = 1
-                )
+                vote.createdAt?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.bodySmall,
+                        maxLines = 1
+                    )
+                }
             }
 
             Row(
@@ -161,7 +137,7 @@ fun VoteSuccess(
             ) {
                 FilledIconButton(
                     modifier = Modifier.size(64.dp),
-                    onClick = onDislike,
+                    onClick = { vote.id?.let { onDislike(it) } },
                     enabled = loading,
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.secondary,
@@ -193,7 +169,7 @@ fun VoteSuccess(
 
                 FilledIconButton(
                     modifier = Modifier.size(64.dp),
-                    onClick = onLike,
+                    onClick = { vote.id?.let { onLike(it) } },
                     enabled = loading,
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.tertiary,
@@ -217,9 +193,14 @@ fun VoteSuccess(
 private fun VoteSuccessPreview() {
     VoteSuccess(
         vote = Vote(
-            image = "https://picsum.photos/402/878?random=1",
-            label = "Preview",
-            location = "Earth"
+            images = listOf(
+                VoteImage(
+                    imageUrl = "https://picsum.photos/402/878?random=1",
+                    createdAt = "Sat, 09 May 2026 14:50:59 GMT"
+                )
+            ),
+            displayName = "Preview",
+            createdAt = "Sat, 09 May 2026 14:50:59 GMT"
         ),
         onDislike = {},
         onChat = {},
