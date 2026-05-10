@@ -14,6 +14,6 @@ data class VoteUiState(
 )
 
 sealed interface VoteIntent {
-    data class Inkrement(val id: String) : VoteIntent
+    data class Upvote(val id: String) : VoteIntent
     data object Refresh : VoteIntent
 }

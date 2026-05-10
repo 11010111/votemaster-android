@@ -32,6 +32,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.multiplebytes.votemaster.presentation.feature.chat.ChatScreen
+import de.multiplebytes.votemaster.presentation.feature.credit.CreditIntent
+import de.multiplebytes.votemaster.presentation.feature.credit.CreditViewModel
 import de.multiplebytes.votemaster.presentation.feature.profile.ProfileScreen
 import de.multiplebytes.votemaster.presentation.feature.ranking.RankingScreen
 import de.multiplebytes.votemaster.presentation.feature.vote.VoteIntent
@@ -59,8 +61,8 @@ fun BaseScreen(
     val canNavigateBack = navController.previousBackStackEntry != null
     var selectedTab by rememberSaveable { mutableStateOf(BaseTab.Vote) }
 
-    val voteViewModel: VoteViewModel = koinViewModel()
-    val uiState by voteViewModel.uiState.collectAsStateWithLifecycle()
+    val creditViewModel: CreditViewModel = koinViewModel()
+    val creditUiState by creditViewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -96,7 +98,7 @@ fun BaseScreen(
 
                             Text(
                                 modifier = Modifier.width(44.dp),
-                                text = "${uiState.credits}",
+                                text = "${creditUiState.credits}",
                                 style = MaterialTheme.typography.labelSmall,
                                 textAlign = TextAlign.Center,
                                 maxLines = 1
@@ -129,18 +131,27 @@ fun BaseScreen(
             startDestination = selectedTab.route
         ) {
             composable<BaseRoute.Vote> {
+                val voteViewModel: VoteViewModel = koinViewModel()
+                val uiState by voteViewModel.uiState.collectAsStateWithLifecycle()
+
                 VoteScreen(
                     modifier = Modifier.padding(innerPadding),
                     uiState = uiState,
                     onDislike = { id ->
                         voteViewModel.onIntent(
-                            intent = VoteIntent.Inkrement(id = id)
+                            intent = VoteIntent.Upvote(id = id)
+                        )
+                        creditViewModel.onIntent(
+                            intent = CreditIntent.Inkrement
                         )
                     },
                     onChat = {},
                     onLike = { id ->
                         voteViewModel.onIntent(
-                            intent = VoteIntent.Inkrement(id = id)
+                            intent = VoteIntent.Upvote(id = id)
+                        )
+                        creditViewModel.onIntent(
+                            intent = CreditIntent.Inkrement
                         )
                     },
                 )

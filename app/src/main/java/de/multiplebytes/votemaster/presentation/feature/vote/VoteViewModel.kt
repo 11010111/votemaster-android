@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.multiplebytes.votemaster.domain.model.VoteRecord
 import de.multiplebytes.votemaster.domain.usecase.vote.CreateLocalVoteUseCase
-import de.multiplebytes.votemaster.domain.usecase.vote.LocalVotesUseCase
-import de.multiplebytes.votemaster.domain.usecase.vote.VoteUseCase
+import de.multiplebytes.votemaster.domain.usecase.vote.AllLocalVotesUseCase
+import de.multiplebytes.votemaster.domain.usecase.vote.SingleVoteUseCase
 import de.multiplebytes.votemaster.presentation.common.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class VoteViewModel(
-    private val voteUseCase: VoteUseCase,
-    private val localVotesUseCase: LocalVotesUseCase,
+    private val singleVoteUseCase: SingleVoteUseCase,
+    private val allLocalVotesUseCase: AllLocalVotesUseCase,
     private val createLocalVoteUseCase: CreateLocalVoteUseCase
 ) : ViewModel(), BaseViewModel<VoteUiState, VoteIntent> {
     private val _uiState = MutableStateFlow(VoteUiState())
@@ -26,8 +26,7 @@ class VoteViewModel(
 
     override fun onIntent(intent: VoteIntent) {
         when (intent) {
-            is VoteIntent.Inkrement -> {
-                incrementPoints()
+            is VoteIntent.Upvote -> {
                 createLocalVote(
                     vote = VoteRecord(id = intent.id)
                 )
@@ -48,9 +47,9 @@ class VoteViewModel(
                 )
             }
 
-            val votes = localVotesUseCase().map { vote -> vote.id }
+            val localVotes = allLocalVotesUseCase().map { vote -> vote.id }
 
-            voteUseCase(votes)
+            singleVoteUseCase(exclude = localVotes)
                 .onSuccess { vote ->
                     _uiState.update { currentState ->
                         currentState.copy(
@@ -67,16 +66,6 @@ class VoteViewModel(
                         )
                     }
                 }
-        }
-    }
-
-    private fun incrementPoints() {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    credits = currentState.credits + 1
-                )
-            }
         }
     }
 
