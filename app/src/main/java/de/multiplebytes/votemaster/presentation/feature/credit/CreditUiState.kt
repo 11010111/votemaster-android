@@ -5,5 +5,5 @@ data class CreditUiState(
 )
 
 sealed interface CreditIntent {
-    data object Inkrement : CreditIntent
+    data class Increment(val count: Int) : CreditIntent
 }

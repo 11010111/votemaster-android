@@ -142,7 +142,7 @@ fun BaseScreen(
                             intent = VoteIntent.Upvote(id = id)
                         )
                         creditViewModel.onIntent(
-                            intent = CreditIntent.Inkrement
+                            intent = CreditIntent.Increment(count = 1)
                         )
                     },
                     onChat = {},
@@ -151,7 +151,7 @@ fun BaseScreen(
                             intent = VoteIntent.Upvote(id = id)
                         )
                         creditViewModel.onIntent(
-                            intent = CreditIntent.Inkrement
+                            intent = CreditIntent.Increment(count = 1)
                         )
                     },
                 )

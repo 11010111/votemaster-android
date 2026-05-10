@@ -27,15 +27,15 @@ class CreditViewModel(
 
     override fun onIntent(intent: CreditIntent) {
         when (intent) {
-            is CreditIntent.Inkrement -> {
-                inkrement()
+            is CreditIntent.Increment -> {
+                increment(count = intent.count)
             }
         }
     }
 
-    private fun inkrement() {
+    private fun increment(count: Int) {
         viewModelScope.launch {
-            updateCreditUseCase(count = uiState.value.credits + 1)
+            updateCreditUseCase(count = uiState.value.credits + count)
         }
     }
 }
