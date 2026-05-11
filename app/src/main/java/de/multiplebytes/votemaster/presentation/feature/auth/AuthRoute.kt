@@ -11,4 +11,7 @@ sealed interface AuthRoute {
 
     @Serializable
     data class PasswordStep(val email: String) : AuthRoute
+
+    @Serializable
+    data class PhotoStep(val email: String, val password: String) : AuthRoute
 }

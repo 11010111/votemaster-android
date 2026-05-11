@@ -5,10 +5,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Vote(
-    val id: String? = null,
+    val id: String,
     @SerialName("created_at")
     val createdAt: String? = null,
     @SerialName("display_name")
     val displayName: String,
-    val images: List<VoteImage>
+    val image: String? = null
 )

@@ -42,7 +42,7 @@ class AuthViewModel(
             }
 
             is AuthIntent.SignUp -> {
-                signUp(email = intent.email, password = intent.password)
+                signUp(email = intent.email, password = intent.password, photo = intent.photo)
             }
 
             is AuthIntent.SignOut -> {
@@ -69,9 +69,9 @@ class AuthViewModel(
         }
     }
 
-    private fun signUp(email: String, password: String) {
+    private fun signUp(email: String, password: String, photo: ByteArray?) {
         viewModelScope.launch {
-            signUpUseCase(email = email, password = password)
+            signUpUseCase(email = email, password = password, photo = photo)
                 .onSuccess {
                     _uiState.update { currentState ->
                         currentState.copy(errorMessage = null)

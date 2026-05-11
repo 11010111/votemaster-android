@@ -9,7 +9,6 @@ sealed interface VoteStatus {
 }
 
 data class VoteUiState(
-    val credits: Int = 0,
     val voteStatus: VoteStatus = VoteStatus.Loading
 )
 

@@ -5,9 +5,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class VoteImage(
-    val id: Int? = 0,
+    val id: Int? = null,
     @SerialName("created_at")
     val createdAt: String? = null,
+    @SerialName("vote_id")
+    val voteId: String,
     @SerialName("image_url")
     val imageUrl: String
 )

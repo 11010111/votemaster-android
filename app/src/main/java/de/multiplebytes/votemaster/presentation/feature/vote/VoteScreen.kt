@@ -14,7 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import de.multiplebytes.votemaster.domain.model.Vote
-import de.multiplebytes.votemaster.domain.model.VoteImage
 import de.multiplebytes.votemaster.presentation.common.component.Failure
 import de.multiplebytes.votemaster.presentation.common.component.Loading
 import de.multiplebytes.votemaster.presentation.feature.vote.component.VoteSuccess
@@ -87,12 +86,8 @@ private fun VoteScreenSuccessPreview() {
         uiState = VoteUiState(
             voteStatus = VoteStatus.Success(
                 vote = Vote(
-                    displayName = "Preview",
-                    images = listOf(
-                        VoteImage(
-                            imageUrl = "https://picsum.photos/402/878?random=1"
-                        )
-                    )
+                    id = "1234",
+                    displayName = "Preview"
                 )
             )
         ),

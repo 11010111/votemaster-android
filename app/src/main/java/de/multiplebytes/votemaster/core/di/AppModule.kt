@@ -29,6 +29,7 @@ import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.realtime.Realtime
+import io.github.jan.supabase.storage.Storage
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -42,6 +43,7 @@ val appModule = module {
             install(Auth)
             install(Postgrest)
             install(Realtime)
+            install(Storage)
         }
     }
 

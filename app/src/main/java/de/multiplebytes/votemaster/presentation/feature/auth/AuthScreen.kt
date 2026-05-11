@@ -24,6 +24,7 @@ import androidx.navigation.toRoute
 import de.multiplebytes.votemaster.presentation.feature.auth.component.SignIn
 import de.multiplebytes.votemaster.presentation.feature.auth.component.EmailStep
 import de.multiplebytes.votemaster.presentation.feature.auth.component.PasswordStep
+import de.multiplebytes.votemaster.presentation.feature.auth.component.PhotoStep
 import de.multiplebytes.votemaster.presentation.theme.ThemePreview
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,7 +33,7 @@ fun AuthScreen(
     modifier: Modifier = Modifier,
     uiState: AuthUiState,
     onSignInClick: (String, String) -> Unit,
-    onSignUpClick: (String, String) -> Unit
+    onSignUpClick: (String, String, ByteArray?) -> Unit
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -94,8 +95,27 @@ fun AuthScreen(
 
                 PasswordStep(
                     uiState = uiState,
-                    onSignUpClick = { password ->
-                        onSignUpClick(route.email, password)
+                    onNextClick = { password ->
+                        navController.navigate(
+                            route = AuthRoute.PhotoStep(
+                                email = route.email,
+                                password = password
+                            )
+                        )
+                    }
+                )
+            }
+            composable<AuthRoute.PhotoStep> { navBackStackEntry ->
+                val route: AuthRoute.PhotoStep = navBackStackEntry.toRoute()
+
+                PhotoStep(
+                    uiState = uiState,
+                    onSignUpClick = { photo ->
+                        onSignUpClick(
+                            route.email,
+                            route.password,
+                            photo
+                        )
                     }
                 )
             }
@@ -110,6 +130,6 @@ private fun AuthScreenPreview() {
     AuthScreen(
         uiState = AuthUiState(),
         onSignInClick = { _, _ -> },
-        onSignUpClick = { _, _ -> }
+        onSignUpClick = { _, _, _ -> }
     )
 }

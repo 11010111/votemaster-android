@@ -36,7 +36,7 @@ import de.multiplebytes.votemaster.presentation.theme.ThemePreview
 fun PasswordStep(
     modifier: Modifier = Modifier,
     uiState: AuthUiState,
-    onSignUpClick: (String) -> Unit
+    onNextClick: (String) -> Unit
 ) {
     var passwordValue by rememberSaveable { mutableStateOf("") }
     var confirmValue by rememberSaveable { mutableStateOf("") }
@@ -110,10 +110,10 @@ fun PasswordStep(
         }
 
         Button(
-            onClick = { onSignUpClick(passwordValue) },
+            onClick = { onNextClick(passwordValue) },
             enabled = passwordValue.isNotEmpty() && passwordValue.length >= 6 && passwordValue == confirmValue
         ) {
-            Text(text = "Sign up")
+            Text(text = "Next")
         }
     }
 }
@@ -124,6 +124,6 @@ fun PasswordStep(
 private fun PasswordStepPreview() {
     PasswordStep(
         uiState = AuthUiState(),
-        onSignUpClick = {}
+        onNextClick = {}
     )
 }

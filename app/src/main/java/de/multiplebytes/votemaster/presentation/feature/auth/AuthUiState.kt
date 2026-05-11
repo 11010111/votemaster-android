@@ -9,6 +9,6 @@ data class AuthUiState(
 
 sealed interface AuthIntent {
     data class SignIn(val email: String, val password: String) : AuthIntent
-    data class SignUp(val email: String, val password: String) : AuthIntent
+    data class SignUp(val email: String, val password: String, val photo: ByteArray?) : AuthIntent
     data object SignOut : AuthIntent
 }

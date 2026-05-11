@@ -7,7 +7,9 @@ import io.github.jan.supabase.annotations.SupabaseExperimental
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.filter.FilterOperator
 import io.github.jan.supabase.realtime.selectAsFlow
+import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class VoteRepositoryImpl(
     private val supabaseClient: SupabaseClient
@@ -16,14 +18,21 @@ class VoteRepositoryImpl(
 
     @OptIn(SupabaseExperimental::class)
     override fun votes(): Flow<List<Vote>> {
-        return supabaseClient.from(voteTable).selectAsFlow(Vote::id)
+        val userId = supabaseClient.auth.currentUserOrNull()?.id
+
+        return supabaseClient.from(voteTable).selectAsFlow(Vote::id).map { votes ->
+            votes.filter { it.id != userId }
+        }
     }
 
     override suspend fun vote(exclude: List<String>): Result<Vote?> = runCatching {
+        val userId = supabaseClient.auth.currentUserOrNull()?.id
+        val allExclude = if (userId != null) exclude + userId else exclude
+
         supabaseClient.from(voteTable).select {
             filter {
-                if (exclude.isNotEmpty()) {
-                    filterNot(column = "id", operator = FilterOperator.IN, exclude)
+                if (allExclude.isNotEmpty()) {
+                    filterNot(column = "id", operator = FilterOperator.IN, allExclude)
                 }
             }
             limit(1)
