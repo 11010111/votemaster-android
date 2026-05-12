@@ -27,10 +27,7 @@ class VoteViewModel(
     override fun onIntent(intent: VoteIntent) {
         when (intent) {
             is VoteIntent.Upvote -> {
-                createLocalVote(
-                    vote = VoteRecord(id = intent.id)
-                )
-                loadVote()
+                createLocalVote(id = intent.id)
             }
 
             is VoteIntent.Refresh -> {
@@ -69,9 +66,10 @@ class VoteViewModel(
         }
     }
 
-    private fun createLocalVote(vote: VoteRecord) {
+    private fun createLocalVote(id: String) {
         viewModelScope.launch {
-            createLocalVoteUseCase(vote = vote)
+            createLocalVoteUseCase(vote = VoteRecord(id = id))
+            loadVote()
         }
     }
 }

@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,7 +45,7 @@ import de.multiplebytes.votemaster.presentation.theme.ThemePreview
 fun PhotoStep(
     modifier: Modifier = Modifier,
     uiState: AuthUiState,
-    onSignUpClick: (ByteArray?) -> Unit
+    onSignUpClick: (ByteArray) -> Unit
 ) {
     val context = LocalContext.current
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
@@ -55,6 +56,14 @@ fun PhotoStep(
         selectedImageUri = uri
     }
 
+    val imageBytes by rememberSaveable(selectedImageUri) {
+        mutableStateOf(
+            selectedImageUri?.let { uri ->
+                context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
+            }
+        )
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -63,6 +72,11 @@ fun PhotoStep(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(30.dp, Alignment.CenterVertically)
     ) {
+        Text(
+            text = "Pick a photo for your profile.",
+            textAlign = TextAlign.Center
+        )
+
         Box(
             modifier = Modifier
                 .widthIn(max = 240.dp)
@@ -96,11 +110,6 @@ fun PhotoStep(
             }
         }
 
-        Text(
-            text = "Pick a photo for your profile.",
-            textAlign = TextAlign.Center
-        )
-
         uiState.errorMessage?.let {
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -113,12 +122,11 @@ fun PhotoStep(
 
         Button(
             onClick = {
-                val byteArray = selectedImageUri?.let { uri ->
-                    context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                imageBytes?.let {
+                    onSignUpClick(it)
                 }
-                onSignUpClick(byteArray)
             },
-            enabled = true
+            enabled = selectedImageUri != null
         ) {
             Text(text = "Sign up")
         }

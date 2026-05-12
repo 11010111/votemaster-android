@@ -23,6 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import de.multiplebytes.votemaster.presentation.feature.auth.component.SignIn
 import de.multiplebytes.votemaster.presentation.feature.auth.component.EmailStep
+import de.multiplebytes.votemaster.presentation.feature.auth.component.NameStep
 import de.multiplebytes.votemaster.presentation.feature.auth.component.PasswordStep
 import de.multiplebytes.votemaster.presentation.feature.auth.component.PhotoStep
 import de.multiplebytes.votemaster.presentation.theme.ThemePreview
@@ -33,7 +34,7 @@ fun AuthScreen(
     modifier: Modifier = Modifier,
     uiState: AuthUiState,
     onSignInClick: (String, String) -> Unit,
-    onSignUpClick: (String, String, ByteArray?) -> Unit
+    onSignUpClick: (String, String, String, ByteArray) -> Unit
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -77,15 +78,31 @@ fun AuthScreen(
                     uiState = uiState,
                     onSignInClick = onSignInClick,
                     onSignUpClick = {
-                        navController.navigate(route = AuthRoute.EmailStep)
+                        navController.navigate(route = AuthRoute.NameStep)
                     }
                 )
             }
-            composable<AuthRoute.EmailStep> {
+            composable<AuthRoute.NameStep> {
+                NameStep(
+                    onNextClick = { displayName ->
+                        navController.navigate(
+                            route = AuthRoute.EmailStep(
+                                displayName = displayName
+                            )
+                        )
+                    }
+                )
+            }
+            composable<AuthRoute.EmailStep> { navBackStackEntry ->
+                val route: AuthRoute.EmailStep = navBackStackEntry.toRoute()
+
                 EmailStep(
                     onNextClick = { email ->
                         navController.navigate(
-                            route = AuthRoute.PasswordStep(email = email)
+                            route = AuthRoute.PasswordStep(
+                                displayName = route.displayName,
+                                email = email
+                            )
                         )
                     }
                 )
@@ -98,6 +115,7 @@ fun AuthScreen(
                     onNextClick = { password ->
                         navController.navigate(
                             route = AuthRoute.PhotoStep(
+                                displayName = route.displayName,
                                 email = route.email,
                                 password = password
                             )
@@ -112,6 +130,7 @@ fun AuthScreen(
                     uiState = uiState,
                     onSignUpClick = { photo ->
                         onSignUpClick(
+                            route.displayName,
                             route.email,
                             route.password,
                             photo
@@ -130,6 +149,6 @@ private fun AuthScreenPreview() {
     AuthScreen(
         uiState = AuthUiState(),
         onSignInClick = { _, _ -> },
-        onSignUpClick = { _, _, _ -> }
+        onSignUpClick = { _, _, _, _ -> }
     )
 }

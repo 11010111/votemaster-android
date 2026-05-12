@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BrokenImage
 import androidx.compose.material.icons.rounded.ChatBubble
@@ -54,9 +54,9 @@ fun VoteSuccess(
                 .fillMaxSize()
                 .background(
                     color = MaterialTheme.colorScheme.surfaceContainer,
-                    shape = MaterialTheme.shapes.large
+                    shape = MaterialTheme.shapes.extraLarge
                 )
-                .clip(shape = MaterialTheme.shapes.large),
+                .clip(shape = MaterialTheme.shapes.extraLarge),
             model = vote.image,
             contentDescription = vote.displayName,
             contentScale = ContentScale.Crop,
@@ -96,7 +96,9 @@ fun VoteSuccess(
                         color = MaterialTheme.colorScheme.background.copy(
                             alpha = 0.8f
                         ),
-                        shape = RoundedCornerShape(28.dp)
+                        shape = MaterialTheme.shapes.extraLarge.copy(
+                            all = CornerSize(24.dp)
+                        )
                     )
                     .padding(horizontal = 16.dp, vertical = 18.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)

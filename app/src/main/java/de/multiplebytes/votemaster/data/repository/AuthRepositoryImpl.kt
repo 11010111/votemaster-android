@@ -28,9 +28,10 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun signUp(
+        displayName: String,
         email: String,
         password: String,
-        photo: ByteArray?
+        photo: ByteArray
     ): Result<UserInfo?> = runCatching {
         val userInfo = supabaseClient.auth.signUpWith(Email) {
             this.email = email
@@ -40,19 +41,18 @@ class AuthRepositoryImpl(
         val userId = userInfo.id
         var publicUrl: String? = null
 
-        if (photo != null) {
-            val fileName = "$userId/thumbnail.jpg"
-            val bucket = supabaseClient.storage.from(imagesBucket)
+        val fileName = "$userId/thumbnail.jpg"
+        val bucket = supabaseClient.storage.from(imagesBucket)
 
-            bucket.upload(fileName, photo) {
-                upsert = true
-            }
-            publicUrl = bucket.publicUrl(fileName)
+        bucket.upload(fileName, photo) {
+            upsert = true
         }
+
+        publicUrl = bucket.publicUrl(fileName)
 
         val vote = Vote(
             id = userId,
-            displayName = "Anonymous",
+            displayName = displayName,
             image = publicUrl
         )
 
