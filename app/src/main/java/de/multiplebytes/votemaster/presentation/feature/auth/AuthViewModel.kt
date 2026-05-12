@@ -43,7 +43,8 @@ class AuthViewModel(
 
             is AuthIntent.SignUp -> {
                 signUp(
-                    displayName = intent.displayName,
+                    name = intent.name,
+                    biography = intent.biography,
                     email = intent.email,
                     password = intent.password,
                     photo = intent.photo
@@ -74,10 +75,17 @@ class AuthViewModel(
         }
     }
 
-    private fun signUp(displayName: String, email: String, password: String, photo: ByteArray) {
+    private fun signUp(
+        name: String,
+        biography: String,
+        email: String,
+        password: String,
+        photo: ByteArray
+    ) {
         viewModelScope.launch {
             signUpUseCase(
-                displayName = displayName,
+                name = name,
+                biography = biography,
                 email = email,
                 password = password,
                 photo = photo

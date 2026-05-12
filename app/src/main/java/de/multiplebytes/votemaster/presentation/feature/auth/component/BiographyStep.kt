@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.automirrored.rounded.ShortText
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -27,11 +27,11 @@ import androidx.compose.ui.unit.dp
 import de.multiplebytes.votemaster.presentation.theme.ThemePreview
 
 @Composable
-fun NameStep(
+fun BiographyStep(
     modifier: Modifier = Modifier,
     onNextClick: (String) -> Unit
 ) {
-    var nameValue by rememberSaveable { mutableStateOf("") }
+    var biographyValue by rememberSaveable { mutableStateOf("") }
 
     Column(
         modifier = modifier
@@ -42,33 +42,37 @@ fun NameStep(
     ) {
         Icon(
             modifier = Modifier.size(48.dp),
-            imageVector = Icons.Rounded.Person,
-            contentDescription = "E-Mail",
+            imageVector = Icons.AutoMirrored.Rounded.ShortText,
+            contentDescription = "Biography",
             tint = MaterialTheme.colorScheme.secondary
         )
 
-        Text(text = "Enter your name")
+        Text(text = "Enter your biography")
 
         TextField(
-            value = nameValue,
-            onValueChange = { nameValue = it },
-            label = { Text(text = "Name") },
+            value = biographyValue,
+            onValueChange = {
+                if (it.length < 140) {
+                    biographyValue = it
+                }
+            },
+            label = { Text(text = "Biography") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text
             ),
-            isError = nameValue.isNotEmpty() && nameValue.length < 3,
+            isError = biographyValue.isNotEmpty() && biographyValue.length < 3,
             supportingText = {
-                if (nameValue.isNotEmpty() && nameValue.length < 3) {
+                if (biographyValue.isNotEmpty() && biographyValue.length < 3) {
                     Text(text = "The input must be longer than 3 characters.")
                 }
             },
-            maxLines = 1,
-            singleLine = true
+            minLines = 4,
+            maxLines = 4
         )
 
         Button(
-            onClick = { onNextClick(nameValue) },
-            enabled = !nameValue.isEmpty() && nameValue.length > 3
+            onClick = { onNextClick(biographyValue) },
+            enabled = !biographyValue.isEmpty() && biographyValue.length > 3
         ) {
             Text(text = "Next")
         }
@@ -78,8 +82,8 @@ fun NameStep(
 @PreviewWrapper(ThemePreview::class)
 @Preview(showBackground = true)
 @Composable
-private fun NameStepPreview() {
-    NameStep(
+private fun BiographyStepPreview() {
+    BiographyStep(
         onNextClick = {}
     )
 }

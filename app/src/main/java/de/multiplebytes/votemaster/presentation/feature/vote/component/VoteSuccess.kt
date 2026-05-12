@@ -13,9 +13,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BrokenImage
-import androidx.compose.material.icons.rounded.ChatBubble
+import androidx.compose.material.icons.rounded.CardGiftcard
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
@@ -32,15 +32,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
-import de.multiplebytes.votemaster.domain.model.Vote
+import de.multiplebytes.votemaster.domain.model.Profile
 import de.multiplebytes.votemaster.presentation.theme.ThemePreview
 
 @Composable
 fun VoteSuccess(
     modifier: Modifier = Modifier,
-    vote: Vote,
+    profile: Profile,
     onDislike: (String) -> Unit,
-    onChat: () -> Unit,
+    onGiftClick: () -> Unit,
     onLike: (String) -> Unit,
 ) {
     Box(
@@ -57,8 +57,8 @@ fun VoteSuccess(
                     shape = MaterialTheme.shapes.extraLarge
                 )
                 .clip(shape = MaterialTheme.shapes.extraLarge),
-            model = vote.image,
-            contentDescription = vote.displayName,
+            model = profile.imageUrl,
+            contentDescription = profile.name,
             contentScale = ContentScale.Crop,
             loading = {
                 Box(
@@ -104,19 +104,17 @@ fun VoteSuccess(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = vote.displayName,
+                    text = profile.name,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1
                 )
 
-                vote.createdAt?.let {
-                    Text(
-                        text = it,
-                        style = MaterialTheme.typography.bodySmall,
-                        maxLines = 1
-                    )
-                }
+                Text(
+                    text = profile.biography,
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = 1
+                )
             }
 
             Row(
@@ -128,7 +126,7 @@ fun VoteSuccess(
             ) {
                 FilledIconButton(
                     modifier = Modifier.size(64.dp),
-                    onClick = { onDislike(vote.id) },
+                    onClick = { onDislike(profile.id) },
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.secondary,
                         contentColor = MaterialTheme.colorScheme.onSecondary
@@ -136,7 +134,7 @@ fun VoteSuccess(
                 ) {
                     Icon(
                         modifier = Modifier.size(32.dp),
-                        imageVector = Icons.Rounded.Refresh,
+                        imageVector = Icons.Rounded.Close,
                         contentDescription = "Dislike"
                     )
                 }
@@ -146,19 +144,19 @@ fun VoteSuccess(
                 ) {
                     FilledIconButton(
                         modifier = Modifier.size(80.dp),
-                        onClick = onChat
+                        onClick = onGiftClick
                     ) {
                         Icon(
                             modifier = Modifier.size(32.dp),
-                            imageVector = Icons.Rounded.ChatBubble,
-                            contentDescription = "Chat"
+                            imageVector = Icons.Rounded.CardGiftcard,
+                            contentDescription = "Giftcard"
                         )
                     }
                 }
 
                 FilledIconButton(
                     modifier = Modifier.size(64.dp),
-                    onClick = { onLike(vote.id)  },
+                    onClick = { onLike(profile.id) },
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.tertiary,
                         contentColor = MaterialTheme.colorScheme.onTertiary
@@ -180,13 +178,13 @@ fun VoteSuccess(
 @Composable
 private fun VoteSuccessPreview() {
     VoteSuccess(
-        vote = Vote(
+        profile = Profile(
             id = "1234",
-            displayName = "Preview",
-            createdAt = "Sat, 09 May 2026 14:50:59 GMT"
+            name = "Preview",
+            biography = "Sub Preview"
         ),
         onDislike = {},
-        onChat = {},
+        onGiftClick = {},
         onLike = {}
     )
 }

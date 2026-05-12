@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
-import de.multiplebytes.votemaster.domain.model.Vote
+import de.multiplebytes.votemaster.domain.model.Profile
 import de.multiplebytes.votemaster.presentation.common.component.Failure
 import de.multiplebytes.votemaster.presentation.common.component.Loading
 import de.multiplebytes.votemaster.presentation.feature.vote.component.VoteSuccess
@@ -24,19 +24,19 @@ fun VoteScreen(
     modifier: Modifier = Modifier,
     uiState: VoteUiState,
     onDislike: (String) -> Unit,
-    onChat: () -> Unit,
-    onLike: (String) -> Unit,
+    onGiftClick: () -> Unit,
+    onLike: (String) -> Unit
 ) {
     when (val currentState = uiState.voteStatus) {
         is VoteStatus.Loading -> Loading(modifier = modifier)
 
         is VoteStatus.Success -> {
-            if (currentState.vote != null) {
+            if (currentState.profile != null) {
                 VoteSuccess(
                     modifier = modifier,
-                    vote = currentState.vote,
+                    profile = currentState.profile,
                     onLike = onLike,
-                    onChat = onChat,
+                    onGiftClick = onGiftClick,
                     onDislike = onDislike
                 )
             } else {
@@ -73,7 +73,7 @@ private fun VoteScreenLoadingPreview() {
             voteStatus = VoteStatus.Loading
         ),
         onDislike = {},
-        onChat = {},
+        onGiftClick = {},
         onLike = {}
     )
 }
@@ -85,14 +85,15 @@ private fun VoteScreenSuccessPreview() {
     VoteScreen(
         uiState = VoteUiState(
             voteStatus = VoteStatus.Success(
-                vote = Vote(
+                profile = Profile(
                     id = "1234",
-                    displayName = "Preview"
+                    name = "Preview",
+                    biography = "Sub Preview",
                 )
             )
         ),
         onDislike = {},
-        onChat = {},
+        onGiftClick = {},
         onLike = {}
     )
 }
@@ -106,7 +107,7 @@ private fun VoteScreenFailurePreview() {
             voteStatus = VoteStatus.Failure("Unknown error")
         ),
         onDislike = {},
-        onChat = {},
+        onGiftClick = {},
         onLike = {}
     )
 }

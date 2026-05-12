@@ -1,6 +1,6 @@
 package de.multiplebytes.votemaster.data.repository
 
-import de.multiplebytes.votemaster.domain.model.Vote
+import de.multiplebytes.votemaster.domain.model.Profile
 import de.multiplebytes.votemaster.domain.repository.AuthRepository
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
@@ -12,7 +12,7 @@ import io.github.jan.supabase.storage.storage
 class AuthRepositoryImpl(
     private val supabaseClient: SupabaseClient
 ) : AuthRepository {
-    private val votesTable = "votes"
+    private val profilesTable = "profiles"
     private val imagesBucket = "images"
 
     override fun sessionStatus() = supabaseClient.auth.sessionStatus
@@ -28,7 +28,8 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun signUp(
-        displayName: String,
+        name: String,
+        biography: String,
         email: String,
         password: String,
         photo: ByteArray
@@ -39,7 +40,7 @@ class AuthRepositoryImpl(
         } ?: throw Exception("Sign up failed")
 
         val userId = userInfo.id
-        var publicUrl: String? = null
+        var publicUrl: String
 
         val fileName = "$userId/thumbnail.jpg"
         val bucket = supabaseClient.storage.from(imagesBucket)
@@ -50,13 +51,14 @@ class AuthRepositoryImpl(
 
         publicUrl = bucket.publicUrl(fileName)
 
-        val vote = Vote(
+        val profile = Profile(
             id = userId,
-            displayName = displayName,
-            image = publicUrl
+            name = name,
+            biography = biography,
+            imageUrl = publicUrl
         )
 
-        supabaseClient.from(votesTable).upsert(vote)
+        supabaseClient.from(profilesTable).upsert(profile)
 
         userInfo
     }

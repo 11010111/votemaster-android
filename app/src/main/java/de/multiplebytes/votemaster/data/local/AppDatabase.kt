@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import de.multiplebytes.votemaster.domain.model.VoteRecord
+import de.multiplebytes.votemaster.domain.model.Vote
 
-@Database(entities = [VoteRecord::class], version = 1)
+@Database(entities = [Vote::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun voteDao(): VoteDao
 

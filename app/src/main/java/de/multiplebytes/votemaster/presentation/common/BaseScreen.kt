@@ -31,7 +31,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import de.multiplebytes.votemaster.presentation.feature.chat.ChatScreen
+import de.multiplebytes.votemaster.presentation.feature.gift.GiftScreen
 import de.multiplebytes.votemaster.presentation.feature.credit.CreditIntent
 import de.multiplebytes.votemaster.presentation.feature.credit.CreditViewModel
 import de.multiplebytes.votemaster.presentation.feature.profile.ProfileScreen
@@ -53,7 +53,7 @@ fun BaseScreen(
     val currentTitle = when {
         currentDestination?.hasRoute<BaseRoute.Vote>() == true -> BaseTab.Vote.title
         currentDestination?.hasRoute<BaseRoute.Ranking>() == true -> BaseTab.Ranking.title
-        currentDestination?.hasRoute<BaseRoute.Chat>() == true -> BaseTab.Chat.title
+        currentDestination?.hasRoute<BaseRoute.Gift>() == true -> BaseTab.Gift.title
         currentDestination?.hasRoute<BaseRoute.Profile>() == true -> BaseTab.Profile.title
         else -> "Vote Master"
     }
@@ -145,7 +145,7 @@ fun BaseScreen(
                             intent = CreditIntent.Increment(count = 1)
                         )
                     },
-                    onChat = {},
+                    onGiftClick = {},
                     onLike = { id ->
                         voteViewModel.onIntent(
                             intent = VoteIntent.Upvote(id = id)
@@ -161,8 +161,8 @@ fun BaseScreen(
                     modifier = Modifier.padding(innerPadding)
                 )
             }
-            composable<BaseRoute.Chat> {
-                ChatScreen(
+            composable<BaseRoute.Gift> {
+                GiftScreen(
                     modifier = Modifier.padding(innerPadding)
                 )
             }

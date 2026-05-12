@@ -1,10 +1,10 @@
 package de.multiplebytes.votemaster.presentation.feature.vote
 
-import de.multiplebytes.votemaster.domain.model.Vote
+import de.multiplebytes.votemaster.domain.model.Profile
 
 sealed interface VoteStatus {
     data object Loading : VoteStatus
-    data class Success(val vote: Vote?) : VoteStatus
+    data class Success(val profile: Profile?) : VoteStatus
     data class Failure(val message: String) : VoteStatus
 }
 

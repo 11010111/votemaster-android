@@ -10,7 +10,7 @@ sealed interface BaseRoute {
     data object Ranking : BaseRoute
 
     @Serializable
-    data object Chat : BaseRoute
+    data object Gift : BaseRoute
 
     @Serializable
     data object Profile : BaseRoute

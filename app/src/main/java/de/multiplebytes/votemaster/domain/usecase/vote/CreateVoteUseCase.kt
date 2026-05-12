@@ -3,9 +3,8 @@ package de.multiplebytes.votemaster.domain.usecase.vote
 import de.multiplebytes.votemaster.domain.model.Vote
 import de.multiplebytes.votemaster.domain.repository.VoteRepository
 
-class SingleVoteUseCase(
+class CreateVoteUseCase(
     private val voteRepository: VoteRepository
 ) {
-    suspend operator fun invoke(exclude: List<String>): Result<Vote?> =
-        voteRepository.vote(exclude = exclude)
+    suspend operator fun invoke(vote: Vote) = voteRepository.create(vote = vote)
 }

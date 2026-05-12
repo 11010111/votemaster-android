@@ -4,12 +4,12 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class VoteImage(
-    val id: Int? = null,
+data class Profile(
+    val id: String,
     @SerialName("created_at")
     val createdAt: String? = null,
-    @SerialName("vote_id")
-    val voteId: String,
+    val name: String,
+    val biography: String,
     @SerialName("image_url")
-    val imageUrl: String
+    val imageUrl: String = ""
 )

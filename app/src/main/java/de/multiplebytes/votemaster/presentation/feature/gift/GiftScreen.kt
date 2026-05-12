@@ -1,4 +1,4 @@
-package de.multiplebytes.votemaster.presentation.feature.chat
+package de.multiplebytes.votemaster.presentation.feature.gift
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,20 +11,20 @@ import androidx.compose.ui.tooling.preview.PreviewWrapper
 import de.multiplebytes.votemaster.presentation.theme.ThemePreview
 
 @Composable
-fun ChatScreen(
+fun GiftScreen(
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "Chat")
+        Text(text = "Gifts")
     }
 }
 
 @PreviewWrapper(ThemePreview::class)
 @Preview(showBackground = true)
 @Composable
-private fun ChatScreenPreview() {
-    ChatScreen()
+private fun GiftScreenPreview() {
+    GiftScreen()
 }

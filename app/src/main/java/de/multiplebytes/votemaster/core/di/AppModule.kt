@@ -5,22 +5,22 @@ import de.multiplebytes.votemaster.data.local.AppDatabase
 import de.multiplebytes.votemaster.data.local.VoteDao
 import de.multiplebytes.votemaster.data.repository.AuthRepositoryImpl
 import de.multiplebytes.votemaster.data.repository.CreditRepositoryImpl
-import de.multiplebytes.votemaster.data.repository.LocalVoteRepositoryImpl
 import de.multiplebytes.votemaster.data.repository.VoteRepositoryImpl
+import de.multiplebytes.votemaster.data.repository.ProfileRepositoryImpl
 import de.multiplebytes.votemaster.domain.repository.AuthRepository
 import de.multiplebytes.votemaster.domain.repository.CreditRepository
-import de.multiplebytes.votemaster.domain.repository.LocalVoteRepository
 import de.multiplebytes.votemaster.domain.repository.VoteRepository
+import de.multiplebytes.votemaster.domain.repository.ProfileRepository
 import de.multiplebytes.votemaster.domain.usecase.auth.SessionStatusUseCase
 import de.multiplebytes.votemaster.domain.usecase.auth.SignInUseCase
 import de.multiplebytes.votemaster.domain.usecase.auth.SignOutUseCase
 import de.multiplebytes.votemaster.domain.usecase.auth.SignUpUseCase
 import de.multiplebytes.votemaster.domain.usecase.credit.CreditUseCase
 import de.multiplebytes.votemaster.domain.usecase.credit.UpdateCreditUseCase
-import de.multiplebytes.votemaster.domain.usecase.vote.AllVotesUseCase
-import de.multiplebytes.votemaster.domain.usecase.vote.CreateLocalVoteUseCase
-import de.multiplebytes.votemaster.domain.usecase.vote.AllLocalVotesUseCase
-import de.multiplebytes.votemaster.domain.usecase.vote.SingleVoteUseCase
+import de.multiplebytes.votemaster.domain.usecase.vote.ProfilesUseCase
+import de.multiplebytes.votemaster.domain.usecase.vote.CreateVoteUseCase
+import de.multiplebytes.votemaster.domain.usecase.vote.VotesUseCase
+import de.multiplebytes.votemaster.domain.usecase.vote.SingleProfileUseCase
 import de.multiplebytes.votemaster.presentation.feature.auth.AuthViewModel
 import de.multiplebytes.votemaster.presentation.feature.credit.CreditViewModel
 import de.multiplebytes.votemaster.presentation.feature.vote.VoteViewModel
@@ -51,16 +51,16 @@ val appModule = module {
         AuthRepositoryImpl(get())
     }
 
-    single<VoteRepository> {
-        VoteRepositoryImpl(get())
+    single<ProfileRepository> {
+        ProfileRepositoryImpl(get())
     }
 
     single<VoteDao> {
         AppDatabase.getDatabase(androidContext()).voteDao()
     }
 
-    single<LocalVoteRepository> {
-        LocalVoteRepositoryImpl(get())
+    single<VoteRepository> {
+        VoteRepositoryImpl(get())
     }
 
     single<CreditRepository> {
@@ -72,10 +72,10 @@ val appModule = module {
     factory { SignUpUseCase(get()) }
     factory { SignOutUseCase(get()) }
 
-    factory { AllLocalVotesUseCase(get()) }
-    factory { CreateLocalVoteUseCase(get()) }
-    factory { AllVotesUseCase(get()) }
-    factory { SingleVoteUseCase(get()) }
+    factory { VotesUseCase(get()) }
+    factory { CreateVoteUseCase(get()) }
+    factory { ProfilesUseCase(get()) }
+    factory { SingleProfileUseCase(get()) }
 
     factory { CreditUseCase(get()) }
     factory { UpdateCreditUseCase(get()) }

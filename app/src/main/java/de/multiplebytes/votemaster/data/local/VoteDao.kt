@@ -4,14 +4,13 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Upsert
-import de.multiplebytes.votemaster.domain.model.VoteRecord
+import de.multiplebytes.votemaster.domain.model.Vote
 
 @Dao
 interface VoteDao {
     @Query("SELECT * FROM votes")
-    suspend fun votes(): List<VoteRecord>
+    suspend fun votes(): List<Vote>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun create(vote: VoteRecord)
+    suspend fun create(vote: Vote)
 }

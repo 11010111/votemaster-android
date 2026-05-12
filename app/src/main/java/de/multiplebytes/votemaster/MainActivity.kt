@@ -52,10 +52,11 @@ class MainActivity : ComponentActivity() {
                                     )
                                 )
                             },
-                            onSignUpClick = { displayName, email, password, photo ->
+                            onSignUpClick = { name, biography, email, password, photo ->
                                 authViewModel.onIntent(
                                     intent = AuthIntent.SignUp(
-                                        displayName = displayName,
+                                        name = name,
+                                        biography = biography,
                                         email = email,
                                         password = password,
                                         photo = photo

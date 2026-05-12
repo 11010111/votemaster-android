@@ -7,13 +7,15 @@ class SignUpUseCase(
     private val authRepository: AuthRepository
 ) {
     suspend operator fun invoke(
-        displayName: String,
+        name: String,
+        biography: String,
         email: String,
         password: String,
         photo: ByteArray
     ): Result<UserInfo?> =
         authRepository.signUp(
-            displayName = displayName,
+            name = name,
+            biography = biography,
             email = email,
             password = password,
             photo = photo

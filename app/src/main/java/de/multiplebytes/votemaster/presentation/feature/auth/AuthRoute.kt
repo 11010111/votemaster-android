@@ -10,11 +10,14 @@ sealed interface AuthRoute {
     data object NameStep : AuthRoute
 
     @Serializable
-    data class EmailStep(val displayName: String) : AuthRoute
+    data class BiographyStep(val name: String) : AuthRoute
 
     @Serializable
-    data class PasswordStep(val displayName: String, val email: String) : AuthRoute
+    data class EmailStep(val name: String, val biography: String) : AuthRoute
 
     @Serializable
-    data class PhotoStep(val displayName: String, val email: String, val password: String) : AuthRoute
+    data class PasswordStep(val name: String, val biography: String, val email: String) : AuthRoute
+
+    @Serializable
+    data class PhotoStep(val name: String, val biography: String, val email: String, val password: String) : AuthRoute
 }
