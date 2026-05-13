@@ -7,6 +7,7 @@ import de.multiplebytes.votemaster.domain.usecase.vote.CreateVoteUseCase
 import de.multiplebytes.votemaster.domain.usecase.vote.VotesUseCase
 import de.multiplebytes.votemaster.domain.usecase.vote.SingleProfileUseCase
 import de.multiplebytes.votemaster.presentation.common.BaseViewModel
+import io.github.jan.supabase.exceptions.RestException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -55,12 +56,26 @@ class VoteViewModel(
                     }
                 }
                 .onFailure { exception ->
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            voteStatus = VoteStatus.Failure(
-                                message = exception.message ?: "Unknown error"
-                            )
-                        )
+                    when (exception) {
+                        is RestException -> {
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    voteStatus = VoteStatus.Failure(
+                                        message = "Service unavailable"
+                                    )
+                                )
+                            }
+                        }
+
+                        else -> {
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    voteStatus = VoteStatus.Failure(
+                                        message = "Connection failed"
+                                    )
+                                )
+                            }
+                        }
                     }
                 }
         }
