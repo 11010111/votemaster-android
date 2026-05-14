@@ -17,10 +17,10 @@ import de.multiplebytes.votemaster.domain.usecase.auth.SignOutUseCase
 import de.multiplebytes.votemaster.domain.usecase.auth.SignUpUseCase
 import de.multiplebytes.votemaster.domain.usecase.credit.CreditUseCase
 import de.multiplebytes.votemaster.domain.usecase.credit.UpdateCreditUseCase
-import de.multiplebytes.votemaster.domain.usecase.vote.ProfilesUseCase
+import de.multiplebytes.votemaster.domain.usecase.profile.ProfilesUseCase
 import de.multiplebytes.votemaster.domain.usecase.vote.CreateVoteUseCase
 import de.multiplebytes.votemaster.domain.usecase.vote.VotesUseCase
-import de.multiplebytes.votemaster.domain.usecase.vote.SingleProfileUseCase
+import de.multiplebytes.votemaster.domain.usecase.profile.SingleProfileUseCase
 import de.multiplebytes.votemaster.presentation.feature.auth.AuthViewModel
 import de.multiplebytes.votemaster.presentation.feature.credit.CreditViewModel
 import de.multiplebytes.votemaster.presentation.feature.vote.VoteViewModel

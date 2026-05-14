@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import de.multiplebytes.votemaster.domain.model.Vote
 import de.multiplebytes.votemaster.domain.usecase.vote.CreateVoteUseCase
 import de.multiplebytes.votemaster.domain.usecase.vote.VotesUseCase
-import de.multiplebytes.votemaster.domain.usecase.vote.SingleProfileUseCase
+import de.multiplebytes.votemaster.domain.usecase.profile.SingleProfileUseCase
 import de.multiplebytes.votemaster.presentation.common.BaseViewModel
 import io.github.jan.supabase.exceptions.RestException
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,22 +22,22 @@ class VoteViewModel(
     override val uiState = _uiState.asStateFlow()
 
     init {
-        loadVote()
+        fetchNextProfile()
     }
 
     override fun onIntent(intent: VoteIntent) {
         when (intent) {
             is VoteIntent.Upvote -> {
-                createLocalVote(id = intent.id)
+                createVote(id = intent.id)
             }
 
             is VoteIntent.Refresh -> {
-                loadVote()
+                fetchNextProfile()
             }
         }
     }
 
-    private fun loadVote() {
+    private fun fetchNextProfile() {
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
@@ -45,13 +45,13 @@ class VoteViewModel(
                 )
             }
 
-            val localVotes = votesUseCase().map { vote -> vote.id }
+            val votes = votesUseCase().map { vote -> vote.id }
 
-            singleProfileUseCase(exclude = localVotes)
-                .onSuccess { vote ->
+            singleProfileUseCase(exclude = votes)
+                .onSuccess { profile ->
                     _uiState.update { currentState ->
                         currentState.copy(
-                            voteStatus = VoteStatus.Success(profile = vote)
+                            voteStatus = VoteStatus.Success(profile = profile)
                         )
                     }
                 }
@@ -81,10 +81,10 @@ class VoteViewModel(
         }
     }
 
-    private fun createLocalVote(id: String) {
+    private fun createVote(id: String) {
         viewModelScope.launch {
             createVoteUseCase(vote = Vote(id = id))
-            loadVote()
+            fetchNextProfile()
         }
     }
 }
