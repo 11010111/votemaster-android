@@ -58,7 +58,6 @@ fun VoteScreen(
             modifier = modifier,
             title = "Error",
             message = currentState.message,
-            onDismissRequest = {},
             onRetry = {}
         )
     }

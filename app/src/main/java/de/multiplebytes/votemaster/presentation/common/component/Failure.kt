@@ -3,21 +3,19 @@ package de.multiplebytes.votemaster.presentation.common.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import de.multiplebytes.votemaster.presentation.theme.ThemePreview
 
 @Composable
@@ -25,39 +23,40 @@ fun Failure(
     modifier: Modifier = Modifier,
     title: String = "Error",
     message: String,
-    onDismissRequest: () -> Unit,
     onRetry: () -> Unit
 ) {
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
     ) {
-        Dialog(
-            onDismissRequest = onDismissRequest
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(30.dp)
         ) {
-            Card {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.titleLarge
-                    )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge,
+                    textAlign = TextAlign.Center
+                )
 
-                    Text(text = message)
+                Text(
+                    text = message,
+                    textAlign = TextAlign.Center
+                )
+            }
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.End),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Button(onClick = onRetry) {
-                            Text("Retry")
-                        }
-                    }
-                }
+            Button(onClick = onRetry) {
+                Text("Retry")
             }
         }
     }
@@ -70,7 +69,6 @@ private fun FailurePreview() {
     Failure(
         title = "Error",
         message = "Unknown error",
-        onDismissRequest = {},
         onRetry = {}
     )
 }
