@@ -1,5 +1,7 @@
 package de.multiplebytes.votemaster.presentation.feature.vote.component
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,9 +25,13 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import de.multiplebytes.votemaster.domain.model.Profile
 import de.multiplebytes.votemaster.presentation.theme.ThemePreview
+import kotlinx.coroutines.launch
 
 @Composable
 fun VoteSuccess(
@@ -44,6 +51,16 @@ fun VoteSuccess(
     onGiftClick: () -> Unit,
     onLike: (String) -> Unit,
 ) {
+    val scope = rememberCoroutineScope()
+
+    val offsetX = remember { Animatable(0f) }
+    val rotation = remember { Animatable(0f) }
+
+    LaunchedEffect(profile.id) {
+        offsetX.snapTo(0f)
+        rotation.snapTo(0f)
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -53,6 +70,10 @@ fun VoteSuccess(
         SubcomposeAsyncImage(
             modifier = Modifier
                 .fillMaxSize()
+                .graphicsLayer {
+                    translationX = offsetX.value
+                    rotationZ = rotation.value
+                }
                 .background(
                     color = MaterialTheme.colorScheme.surfaceContainer,
                     shape = MaterialTheme.shapes.extraLarge
@@ -93,6 +114,10 @@ fun VoteSuccess(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(4.dp)
+                    .graphicsLayer {
+                        translationX = offsetX.value
+                        rotationZ = rotation.value
+                    }
                     .background(
                         color = MaterialTheme.colorScheme.background.copy(
                             alpha = 0.8f
@@ -127,7 +152,22 @@ fun VoteSuccess(
             ) {
                 FilledIconButton(
                     modifier = Modifier.size(64.dp),
-                    onClick = { profile.id?.let { onDislike(it) } },
+                    onClick = {
+                        scope.launch {
+                            val animX = launch {
+                                offsetX.animateTo(-1500f, tween(400))
+                            }
+
+                            val animR = launch {
+                                rotation.animateTo(-15f, tween(400))
+                            }
+
+                            animX.join()
+                            animR.join()
+
+                            profile.id?.let { onDislike(it) }
+                        }
+                    },
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.secondary,
                         contentColor = MaterialTheme.colorScheme.onSecondary
@@ -158,7 +198,22 @@ fun VoteSuccess(
 
                 FilledIconButton(
                     modifier = Modifier.size(64.dp),
-                    onClick = { profile.id?.let { onLike(it) } },
+                    onClick = {
+                        scope.launch {
+                            val animX = launch {
+                                offsetX.animateTo(1500f, tween(400))
+                            }
+
+                            val animR = launch {
+                                rotation.animateTo(15f, tween(400))
+                            }
+
+                            animX.join()
+                            animR.join()
+
+                            profile.id?.let { onLike(it) }
+                        }
+                    },
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.tertiary,
                         contentColor = MaterialTheme.colorScheme.onTertiary
