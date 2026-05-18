@@ -39,8 +39,7 @@ class ProfileRepositoryImpl(
                     filterNot(column = "id", operator = FilterOperator.IN, allExclude)
                 }
             }
-            limit(1)
-        }.decodeSingleOrNull<Profile>()
+        }.decodeList<Profile>().randomOrNull()
     }
 
     override suspend fun create(profile: Profile): Result<Unit> = runCatching {
