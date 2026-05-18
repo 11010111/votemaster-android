@@ -4,12 +4,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Vote(
+data class Gift(
     val id: Int? = null,
     @SerialName("created_at")
     val createdAt: String? = null,
-    @SerialName("user_id")
-    val userId: String,
-    @SerialName("profile_id")
-    val profileId: String
+    val type: Int,
+    val sender: String,
+    val receiver: String
 )

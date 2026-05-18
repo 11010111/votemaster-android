@@ -1,15 +1,31 @@
 package de.multiplebytes.votemaster.data.repository
 
-import de.multiplebytes.votemaster.data.local.VoteDao
 import de.multiplebytes.votemaster.domain.model.Vote
 import de.multiplebytes.votemaster.domain.repository.VoteRepository
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.annotations.SupabaseExperimental
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.realtime.selectAsFlow
+import kotlinx.coroutines.flow.Flow
 
 class VoteRepositoryImpl(
-    private val voteDao: VoteDao
+    private val supabaseClient: SupabaseClient
 ) : VoteRepository {
-    override suspend fun votes(): List<Vote> = voteDao.votes()
+    private val votesTabelle = "votes"
 
-    override suspend fun create(vote: Vote) {
-        voteDao.create(vote = vote)
+    @OptIn(SupabaseExperimental::class)
+    override fun observe(): Flow<List<Vote>> = supabaseClient.from(votesTabelle)
+        .selectAsFlow(Vote::id)
+
+    override suspend fun create(profileId: String) {
+        val userId = supabaseClient.auth.currentUserOrNull()?.id ?: ""
+
+        supabaseClient.from(votesTabelle).insert(
+            value = Vote(
+                userId = userId,
+                profileId = profileId
+            )
+        )
     }
 }

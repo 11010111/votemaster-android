@@ -1,8 +1,9 @@
 package de.multiplebytes.votemaster.domain.repository
 
 import de.multiplebytes.votemaster.domain.model.Vote
+import kotlinx.coroutines.flow.Flow
 
 interface VoteRepository {
-    suspend fun votes(): List<Vote>
-    suspend fun create(vote: Vote)
+    fun observe(): Flow<List<Vote>>
+    suspend fun create(profileId: String)
 }

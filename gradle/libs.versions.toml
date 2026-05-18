@@ -15,7 +15,6 @@ material3 = "1.4.0"
 koinBom = "4.2.1"
 supabaseBom = "3.6.0"
 ktorClient = "3.4.3"
-roomRuntime = "2.8.4"
 ksp = "2.3.7"
 
 [libraries]
@@ -47,12 +46,8 @@ supabase-postgrest = { group = "io.github.jan-tennert.supabase", name = "postgre
 supabase-realtime = { group = "io.github.jan-tennert.supabase", name = "realtime-kt" }
 supabase-storage = { group = "io.github.jan-tennert.supabase", name = "storage-kt" }
 ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktorClient" }
-androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
-androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomRuntime" }
-androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomRuntime" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

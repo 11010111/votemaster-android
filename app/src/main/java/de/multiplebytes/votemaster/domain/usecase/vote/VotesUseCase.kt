@@ -2,9 +2,10 @@ package de.multiplebytes.votemaster.domain.usecase.vote
 
 import de.multiplebytes.votemaster.domain.model.Vote
 import de.multiplebytes.votemaster.domain.repository.VoteRepository
+import kotlinx.coroutines.flow.Flow
 
 class VotesUseCase(
     private val voteRepository: VoteRepository
 ) {
-    suspend operator fun invoke(): List<Vote> = voteRepository.votes()
+    operator fun invoke(): Flow<List<Vote>> = voteRepository.observe()
 }

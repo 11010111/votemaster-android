@@ -23,6 +23,7 @@ import de.multiplebytes.votemaster.presentation.theme.ThemePreview
 fun VoteScreen(
     modifier: Modifier = Modifier,
     uiState: VoteUiState,
+    credits: Int,
     onDislike: (String) -> Unit,
     onGiftClick: () -> Unit,
     onLike: (String) -> Unit
@@ -35,6 +36,7 @@ fun VoteScreen(
                 VoteSuccess(
                     modifier = modifier,
                     profile = currentState.profile,
+                    credits = credits,
                     onLike = onLike,
                     onGiftClick = onGiftClick,
                     onDislike = onDislike
@@ -71,6 +73,7 @@ private fun VoteScreenLoadingPreview() {
         uiState = VoteUiState(
             voteStatus = VoteStatus.Loading
         ),
+        credits = 25,
         onDislike = {},
         onGiftClick = {},
         onLike = {}
@@ -91,6 +94,7 @@ private fun VoteScreenSuccessPreview() {
                 )
             )
         ),
+        credits = 25,
         onDislike = {},
         onGiftClick = {},
         onLike = {}
@@ -105,6 +109,7 @@ private fun VoteScreenFailurePreview() {
         uiState = VoteUiState(
             voteStatus = VoteStatus.Failure("Unknown error")
         ),
+        credits = 25,
         onDislike = {},
         onGiftClick = {},
         onLike = {}

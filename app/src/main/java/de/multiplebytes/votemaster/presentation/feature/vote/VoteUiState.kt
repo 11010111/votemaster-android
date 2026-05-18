@@ -9,6 +9,7 @@ sealed interface VoteStatus {
 }
 
 data class VoteUiState(
+    val refresh: Long = System.currentTimeMillis(),
     val voteStatus: VoteStatus = VoteStatus.Loading
 )
 

@@ -11,7 +11,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.google.devtools.ksp)
 }
 
 android {
@@ -54,8 +53,6 @@ android {
 }
 
 dependencies {
-    ksp(libs.androidx.room.compiler)
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -78,8 +75,6 @@ dependencies {
     implementation(libs.supabase.realtime)
     implementation(libs.supabase.storage)
     implementation(libs.ktor.client.okhttp)
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
 
     testImplementation(libs.junit)
 

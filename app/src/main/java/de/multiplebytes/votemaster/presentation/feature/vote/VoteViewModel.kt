@@ -2,89 +2,85 @@ package de.multiplebytes.votemaster.presentation.feature.vote
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import de.multiplebytes.votemaster.domain.model.Vote
+import de.multiplebytes.votemaster.domain.usecase.profile.SingleProfileUseCase
 import de.multiplebytes.votemaster.domain.usecase.vote.CreateVoteUseCase
 import de.multiplebytes.votemaster.domain.usecase.vote.VotesUseCase
-import de.multiplebytes.votemaster.domain.usecase.profile.SingleProfileUseCase
 import de.multiplebytes.votemaster.presentation.common.BaseViewModel
 import io.github.jan.supabase.exceptions.RestException
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class VoteViewModel(
+    votesUseCase: VotesUseCase,
     private val singleProfileUseCase: SingleProfileUseCase,
-    private val votesUseCase: VotesUseCase,
     private val createVoteUseCase: CreateVoteUseCase
 ) : ViewModel(), BaseViewModel<VoteUiState, VoteIntent> {
     private val _uiState = MutableStateFlow(VoteUiState())
-    override val uiState = _uiState.asStateFlow()
 
-    init {
-        fetchNextProfile()
-    }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override val uiState: StateFlow<VoteUiState> = combine(
+        _uiState,
+        votesUseCase()
+    ) { _, votes -> votes }
+        .flatMapLatest { votes ->
+            flow {
+                emit(VoteUiState(voteStatus = VoteStatus.Loading))
+
+                val excludeIds = votes.map { it.profileId }
+
+                singleProfileUseCase(exclude = excludeIds)
+                    .onSuccess { profile ->
+                        emit(VoteUiState(voteStatus = VoteStatus.Success(profile = profile)))
+                    }
+                    .onFailure { exception ->
+                        val message = when (exception) {
+                            is RestException -> "Service unavailable"
+                            else -> "Connection failed"
+                        }
+                        emit(VoteUiState(voteStatus = VoteStatus.Failure(message = message)))
+                    }
+            }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = VoteUiState()
+        )
 
     override fun onIntent(intent: VoteIntent) {
         when (intent) {
             is VoteIntent.Upvote -> {
-                createVote(id = intent.id)
+                create(profileId = intent.id)
             }
 
             is VoteIntent.Refresh -> {
-                fetchNextProfile()
+                refresh()
             }
         }
     }
 
-    private fun fetchNextProfile() {
+    private fun create(profileId: String) {
+        viewModelScope.launch {
+            createVoteUseCase(
+                profileId = profileId)
+        }
+    }
+
+    private fun refresh() {
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
-                    voteStatus = VoteStatus.Loading
+                    refresh = System.currentTimeMillis()
                 )
             }
-
-            val votes = votesUseCase().map { vote -> vote.id }
-
-            singleProfileUseCase(exclude = votes)
-                .onSuccess { profile ->
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            voteStatus = VoteStatus.Success(profile = profile)
-                        )
-                    }
-                }
-                .onFailure { exception ->
-                    when (exception) {
-                        is RestException -> {
-                            _uiState.update { currentState ->
-                                currentState.copy(
-                                    voteStatus = VoteStatus.Failure(
-                                        message = "Service unavailable"
-                                    )
-                                )
-                            }
-                        }
-
-                        else -> {
-                            _uiState.update { currentState ->
-                                currentState.copy(
-                                    voteStatus = VoteStatus.Failure(
-                                        message = "Connection failed"
-                                    )
-                                )
-                            }
-                        }
-                    }
-                }
-        }
-    }
-
-    private fun createVote(id: String) {
-        viewModelScope.launch {
-            createVoteUseCase(vote = Vote(id = id))
-            fetchNextProfile()
         }
     }
 }

@@ -39,6 +39,7 @@ import de.multiplebytes.votemaster.presentation.theme.ThemePreview
 fun VoteSuccess(
     modifier: Modifier = Modifier,
     profile: Profile,
+    credits: Int,
     onDislike: (String) -> Unit,
     onGiftClick: () -> Unit,
     onLike: (String) -> Unit,
@@ -126,7 +127,7 @@ fun VoteSuccess(
             ) {
                 FilledIconButton(
                     modifier = Modifier.size(64.dp),
-                    onClick = { onDislike(profile.id) },
+                    onClick = { profile.id?.let { onDislike(it) } },
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.secondary,
                         contentColor = MaterialTheme.colorScheme.onSecondary
@@ -144,7 +145,8 @@ fun VoteSuccess(
                 ) {
                     FilledIconButton(
                         modifier = Modifier.size(80.dp),
-                        onClick = onGiftClick
+                        onClick = onGiftClick,
+                        enabled = credits >= 25
                     ) {
                         Icon(
                             modifier = Modifier.size(32.dp),
@@ -156,7 +158,7 @@ fun VoteSuccess(
 
                 FilledIconButton(
                     modifier = Modifier.size(64.dp),
-                    onClick = { onLike(profile.id) },
+                    onClick = { profile.id?.let { onLike(it) } },
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.tertiary,
                         contentColor = MaterialTheme.colorScheme.onTertiary
@@ -183,6 +185,7 @@ private fun VoteSuccessPreview() {
             name = "Preview",
             biography = "Sub Preview"
         ),
+        credits = 25,
         onDislike = {},
         onGiftClick = {},
         onLike = {}

@@ -31,9 +31,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import de.multiplebytes.votemaster.presentation.feature.gift.GiftScreen
 import de.multiplebytes.votemaster.presentation.feature.credit.CreditIntent
 import de.multiplebytes.votemaster.presentation.feature.credit.CreditViewModel
+import de.multiplebytes.votemaster.presentation.feature.gift.GiftScreen
 import de.multiplebytes.votemaster.presentation.feature.profile.ProfileScreen
 import de.multiplebytes.votemaster.presentation.feature.ranking.RankingScreen
 import de.multiplebytes.votemaster.presentation.feature.vote.VoteIntent
@@ -145,6 +145,7 @@ fun BaseScreen(
                             intent = CreditIntent.Increment(count = 1)
                         )
                     },
+                    credits = creditUiState.credits,
                     onGiftClick = {},
                     onLike = { id ->
                         voteViewModel.onIntent(
