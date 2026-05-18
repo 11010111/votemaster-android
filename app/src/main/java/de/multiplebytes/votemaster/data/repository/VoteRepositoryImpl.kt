@@ -8,6 +8,7 @@ import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.realtime.selectAsFlow
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 class VoteRepositoryImpl(
     private val supabaseClient: SupabaseClient
@@ -17,6 +18,7 @@ class VoteRepositoryImpl(
     @OptIn(SupabaseExperimental::class)
     override fun observe(): Flow<List<Vote>> = supabaseClient.from(votesTabelle)
         .selectAsFlow(Vote::id)
+        .distinctUntilChanged()
 
     override suspend fun create(profileId: String) {
         val userId = supabaseClient.auth.currentUserOrNull()?.id ?: ""

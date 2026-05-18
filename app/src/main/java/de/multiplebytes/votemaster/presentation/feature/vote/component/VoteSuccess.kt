@@ -1,6 +1,8 @@
 package de.multiplebytes.votemaster.presentation.feature.vote.component
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -55,10 +57,18 @@ fun VoteSuccess(
 
     val offsetX = remember { Animatable(0f) }
     val rotation = remember { Animatable(0f) }
+    val scale = remember { Animatable(0.75f) }
 
     LaunchedEffect(profile.id) {
         offsetX.snapTo(0f)
         rotation.snapTo(0f)
+        scale.snapTo(0.5f)
+        scale.animateTo(
+            targetValue = 1f,
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy
+            )
+        )
     }
 
     Box(
@@ -73,6 +83,8 @@ fun VoteSuccess(
                 .graphicsLayer {
                     translationX = offsetX.value
                     rotationZ = rotation.value
+                    scaleX = scale.value
+                    scaleY = scale.value
                 }
                 .background(
                     color = MaterialTheme.colorScheme.surfaceContainer,
@@ -114,10 +126,6 @@ fun VoteSuccess(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(4.dp)
-                    .graphicsLayer {
-                        translationX = offsetX.value
-                        rotationZ = rotation.value
-                    }
                     .background(
                         color = MaterialTheme.colorScheme.background.copy(
                             alpha = 0.8f
@@ -155,11 +163,21 @@ fun VoteSuccess(
                     onClick = {
                         scope.launch {
                             val animX = launch {
-                                offsetX.animateTo(-1500f, tween(400))
+                                offsetX.animateTo(
+                                    targetValue = -1500f,
+                                    animationSpec = tween(
+                                        delayMillis = 250
+                                    )
+                                )
                             }
 
                             val animR = launch {
-                                rotation.animateTo(-15f, tween(400))
+                                rotation.animateTo(
+                                    targetValue = -15f,
+                                    animationSpec = tween(
+                                        delayMillis = 250
+                                    )
+                                )
                             }
 
                             animX.join()
@@ -201,11 +219,21 @@ fun VoteSuccess(
                     onClick = {
                         scope.launch {
                             val animX = launch {
-                                offsetX.animateTo(1500f, tween(400))
+                                offsetX.animateTo(
+                                    targetValue = 1500f,
+                                    animationSpec = tween(
+                                        delayMillis = 250
+                                    )
+                                )
                             }
 
                             val animR = launch {
-                                rotation.animateTo(15f, tween(400))
+                                rotation.animateTo(
+                                    targetValue = 15f,
+                                    animationSpec = tween(
+                                        delayMillis = 250
+                                    )
+                                )
                             }
 
                             animX.join()

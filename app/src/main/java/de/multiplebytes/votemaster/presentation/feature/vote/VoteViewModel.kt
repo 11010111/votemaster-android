@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -30,7 +29,6 @@ class VoteViewModel(
     override val uiState: StateFlow<VoteUiState> = _uiState
         .flatMapLatest { state ->
             votesUseCase()
-                .onStart { emit(emptyList()) }
                 .catch { emit(emptyList()) }
                 .flatMapLatest { votes ->
                     flow {
