@@ -146,7 +146,7 @@ fun VoteSuccess(
                     FilledIconButton(
                         modifier = Modifier.size(80.dp),
                         onClick = onGiftClick,
-                        enabled = credits >= 25
+                        enabled = credits >= 5
                     ) {
                         Icon(
                             modifier = Modifier.size(32.dp),

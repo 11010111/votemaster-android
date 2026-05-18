@@ -11,9 +11,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -26,28 +27,39 @@ class VoteViewModel(
     private val _uiState = MutableStateFlow(VoteUiState())
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override val uiState: StateFlow<VoteUiState> = combine(
-        _uiState,
-        votesUseCase()
-    ) { _, votes -> votes }
-        .flatMapLatest { votes ->
-            flow {
-                emit(VoteUiState(voteStatus = VoteStatus.Loading))
+    override val uiState: StateFlow<VoteUiState> = _uiState
+        .flatMapLatest { state ->
+            votesUseCase()
+                .onStart { emit(emptyList()) }
+                .catch { emit(emptyList()) }
+                .flatMapLatest { votes ->
+                    flow {
+                        emit(value = state.copy(voteStatus = VoteStatus.Loading))
 
-                val excludeIds = votes.map { it.profileId }
+                        val excludeIds = votes.map { it.profileId }
 
-                singleProfileUseCase(exclude = excludeIds)
-                    .onSuccess { profile ->
-                        emit(VoteUiState(voteStatus = VoteStatus.Success(profile = profile)))
+                        singleProfileUseCase(exclude = excludeIds)
+                            .onSuccess { profile ->
+                                emit(
+                                    value = state.copy(
+                                        voteStatus = VoteStatus.Success(profile = profile)
+                                    )
+                                )
+                            }
+                            .onFailure { exception ->
+                                emit(
+                                    value = state.copy(
+                                        voteStatus = VoteStatus.Failure(
+                                            message = when (exception) {
+                                                is RestException -> "Service unavailable"
+                                                else -> "Connection failed"
+                                            }
+                                        )
+                                    )
+                                )
+                            }
                     }
-                    .onFailure { exception ->
-                        val message = when (exception) {
-                            is RestException -> "Service unavailable"
-                            else -> "Connection failed"
-                        }
-                        emit(VoteUiState(voteStatus = VoteStatus.Failure(message = message)))
-                    }
-            }
+                }
         }
         .stateIn(
             scope = viewModelScope,
@@ -70,7 +82,8 @@ class VoteViewModel(
     private fun create(profileId: String) {
         viewModelScope.launch {
             createVoteUseCase(
-                profileId = profileId)
+                profileId = profileId
+            )
         }
     }
 
