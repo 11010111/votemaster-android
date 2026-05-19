@@ -5,13 +5,18 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.LocalFireDepartment
@@ -24,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
@@ -62,63 +68,77 @@ fun ProfileSuccess(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(30.dp)
     ) {
-        SubcomposeAsyncImage(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(0.65f)
-                .graphicsLayer {
-                    scaleX = scale.value
-                    scaleY = scale.value
-                }
-                .background(
-                    color = MaterialTheme.colorScheme.surface,
-                    shape = MaterialTheme.shapes.large
+        Box(
+            modifier = Modifier.width(240.dp),
+            contentAlignment = Alignment.TopEnd
+        ) {
+            SubcomposeAsyncImage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+                    .graphicsLayer {
+                        scaleX = scale.value
+                        scaleY = scale.value
+                    }
+                    .background(
+                        color = MaterialTheme.colorScheme.tertiary,
+                        shape = CircleShape
+                    )
+                    .padding(8.dp)
+                    .clip(CircleShape)
+                    .shadow(
+                        elevation = 1.dp,
+                        shape = CircleShape
+                    ),
+                model = profile.imageUrl,
+                contentDescription = profile.name,
+                contentScale = ContentScale.Crop
+            )
+
+            Column(
+                modifier = Modifier
+                    .size(48.dp)
+                    .offset(x = -(16.dp))
+                    .background(
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.75f),
+                        shape = CircleShape
+                    )
+                    .clip(CircleShape),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.LocalFireDepartment,
+                    contentDescription = "Points",
+                    tint = MaterialTheme.colorScheme.primary
                 )
-                .clip(MaterialTheme.shapes.large),
-            model = profile.imageUrl,
-            contentDescription = profile.name,
-            contentScale = ContentScale.Crop
-        )
+
+                Text(
+                    text = "$credits",
+                    style = MaterialTheme.typography.labelMedium,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1
+                )
+            }
+        }
 
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Row(
+            Text(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(20.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = profile.name,
-                    style = MaterialTheme.typography.headlineMedium,
-                    maxLines = 1
-                )
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "$credits",
-                        style = MaterialTheme.typography.labelSmall,
-                        textAlign = TextAlign.Center,
-                        maxLines = 1
-                    )
-
-                    Icon(
-                        imageVector = Icons.Rounded.LocalFireDepartment,
-                        contentDescription = "Points",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
+                text = profile.name,
+                style = MaterialTheme.typography.headlineMedium,
+                textAlign = TextAlign.Center,
+                maxLines = 1
+            )
 
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = profile.biography,
                 style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center,
                 maxLines = 5
             )
         }

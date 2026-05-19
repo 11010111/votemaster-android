@@ -52,6 +52,7 @@ fun BaseScreen(
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+    val canNavigateBack = navController.previousBackStackEntry != null
 
     val currentTitle = when {
         currentDestination?.hasRoute<BaseRoute.Vote>() == true -> BaseTab.Vote.title
@@ -61,7 +62,6 @@ fun BaseScreen(
         else -> "Vote Master"
     }
 
-    val canNavigateBack = navController.previousBackStackEntry != null
     var selectedTab by rememberSaveable { mutableStateOf(BaseTab.Vote) }
 
     val creditViewModel: CreditViewModel = koinViewModel()
@@ -115,7 +115,7 @@ fun BaseScreen(
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Rounded.Logout,
                                     contentDescription = "Sign out",
-                                    tint = MaterialTheme.colorScheme.tertiary
+                                    tint = MaterialTheme.colorScheme.error
                                 )
                             }
                         }
