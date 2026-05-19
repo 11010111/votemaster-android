@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Logout
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material.icons.rounded.LocalFireDepartment
 import androidx.compose.material3.BottomAppBar
@@ -87,24 +88,36 @@ fun BaseScreen(
                     }
                 },
                 actions = {
-                    if (currentDestination?.hasRoute<BaseRoute.Vote>() == true) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(2.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.LocalFireDepartment,
-                                contentDescription = "Points",
-                                tint = MaterialTheme.colorScheme.primary
-                            )
+                    when {
+                        currentDestination?.hasRoute<BaseRoute.Vote>() == true -> {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(2.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Rounded.LocalFireDepartment,
+                                    contentDescription = "Points",
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
 
-                            Text(
-                                modifier = Modifier.width(44.dp),
-                                text = "${creditUiState.credits}",
-                                style = MaterialTheme.typography.labelSmall,
-                                textAlign = TextAlign.Center,
-                                maxLines = 1
-                            )
+                                Text(
+                                    modifier = Modifier.width(44.dp),
+                                    text = "${creditUiState.credits}",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    textAlign = TextAlign.Center,
+                                    maxLines = 1
+                                )
+                            }
+                        }
+
+                        currentDestination?.hasRoute<BaseRoute.Profile>() == true -> {
+                            IconButton(onClick = onSignOutClick) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Rounded.Logout,
+                                    contentDescription = "Sign out",
+                                    tint = MaterialTheme.colorScheme.tertiary
+                                )
+                            }
                         }
                     }
                 }
@@ -176,7 +189,7 @@ fun BaseScreen(
                 ProfileScreen(
                     modifier = Modifier.padding(innerPadding),
                     uiState = uiState,
-                    onSignOutClick = onSignOutClick,
+                    credits = creditUiState.credits,
                     onRetry = {
                         profileViewModel.onIntent(
                             intent = ProfileIntent.Retry

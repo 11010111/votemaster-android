@@ -14,7 +14,7 @@ import de.multiplebytes.votemaster.presentation.theme.ThemePreview
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     uiState: ProfileUiState,
-    onSignOutClick: () -> Unit,
+    credits: Int,
     onRetry: () -> Unit
 ) {
     when (val currentStatus = uiState.profileStatus) {
@@ -26,7 +26,7 @@ fun ProfileScreen(
             ProfileSuccess(
                 modifier = modifier,
                 profile = currentStatus.profile,
-                onSignOutClick = onSignOutClick
+                credits = credits
             )
         }
 
@@ -47,7 +47,7 @@ private fun ProfileScreenLoadingPreview() {
         uiState = ProfileUiState(
             profileStatus = ProfileStatus.Loading
         ),
-        onSignOutClick = {},
+        credits = 100,
         onRetry = {}
     )
 }
@@ -66,7 +66,7 @@ private fun ProfileScreenSuccessPreview() {
                 )
             )
         ),
-        onSignOutClick = {},
+        credits = 100,
         onRetry = {}
     )
 }
@@ -81,7 +81,7 @@ private fun ProfileScreenFailurePreview() {
                 message = "Unknown error"
             )
         ),
-        onSignOutClick = {},
+        credits = 100,
         onRetry = {}
     )
 }

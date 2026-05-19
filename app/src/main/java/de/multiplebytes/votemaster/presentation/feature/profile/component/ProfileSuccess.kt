@@ -6,13 +6,16 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.LocalFireDepartment
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
@@ -34,7 +38,7 @@ import de.multiplebytes.votemaster.presentation.theme.ThemePreview
 fun ProfileSuccess(
     modifier: Modifier = Modifier,
     profile: Profile,
-    onSignOutClick: () -> Unit
+    credits: Int
 ) {
     val scrollState = rememberScrollState()
 
@@ -80,12 +84,36 @@ fun ProfileSuccess(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Text(
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                text = profile.name,
-                style = MaterialTheme.typography.headlineMedium,
-                maxLines = 1
-            )
+                horizontalArrangement = Arrangement.spacedBy(20.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = profile.name,
+                    style = MaterialTheme.typography.headlineMedium,
+                    maxLines = 1
+                )
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "$credits",
+                        style = MaterialTheme.typography.labelSmall,
+                        textAlign = TextAlign.Center,
+                        maxLines = 1
+                    )
+
+                    Icon(
+                        imageVector = Icons.Rounded.LocalFireDepartment,
+                        contentDescription = "Points",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
 
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -93,10 +121,6 @@ fun ProfileSuccess(
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 5
             )
-        }
-
-        Button(onClick = onSignOutClick) {
-            Text(text = "Sign out")
         }
     }
 }
@@ -111,6 +135,6 @@ private fun ProfileSuccessPreview() {
             biography = "32, New York",
             imageUrl = ""
         ),
-        onSignOutClick = {}
+        credits = 123
     )
 }
