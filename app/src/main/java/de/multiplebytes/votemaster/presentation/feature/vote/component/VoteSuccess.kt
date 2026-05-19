@@ -62,7 +62,7 @@ fun VoteSuccess(
     LaunchedEffect(profile.id) {
         offsetX.snapTo(0f)
         rotation.snapTo(0f)
-        scale.snapTo(0.5f)
+        scale.snapTo(0.75f)
         scale.animateTo(
             targetValue = 1f,
             animationSpec = spring(

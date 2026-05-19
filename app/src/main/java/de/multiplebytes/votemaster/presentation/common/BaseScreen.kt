@@ -34,7 +34,9 @@ import androidx.navigation.compose.rememberNavController
 import de.multiplebytes.votemaster.presentation.feature.credit.CreditIntent
 import de.multiplebytes.votemaster.presentation.feature.credit.CreditViewModel
 import de.multiplebytes.votemaster.presentation.feature.gift.GiftScreen
+import de.multiplebytes.votemaster.presentation.feature.profile.ProfileIntent
 import de.multiplebytes.votemaster.presentation.feature.profile.ProfileScreen
+import de.multiplebytes.votemaster.presentation.feature.profile.ProfileViewModel
 import de.multiplebytes.votemaster.presentation.feature.ranking.RankingScreen
 import de.multiplebytes.votemaster.presentation.feature.vote.VoteIntent
 import de.multiplebytes.votemaster.presentation.feature.vote.VoteScreen
@@ -168,9 +170,18 @@ fun BaseScreen(
                 )
             }
             composable<BaseRoute.Profile> {
+                val profileViewModel: ProfileViewModel = koinViewModel()
+                val uiState by profileViewModel.uiState.collectAsStateWithLifecycle()
+
                 ProfileScreen(
                     modifier = Modifier.padding(innerPadding),
-                    onSignOutClick = onSignOutClick
+                    uiState = uiState,
+                    onSignOutClick = onSignOutClick,
+                    onRetry = {
+                        profileViewModel.onIntent(
+                            intent = ProfileIntent.Retry
+                        )
+                    }
                 )
             }
         }

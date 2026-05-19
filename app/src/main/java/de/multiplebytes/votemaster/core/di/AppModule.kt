@@ -17,10 +17,12 @@ import de.multiplebytes.votemaster.domain.usecase.credit.CreditUseCase
 import de.multiplebytes.votemaster.domain.usecase.credit.UpdateCreditUseCase
 import de.multiplebytes.votemaster.domain.usecase.profile.ProfilesUseCase
 import de.multiplebytes.votemaster.domain.usecase.profile.SingleProfileUseCase
+import de.multiplebytes.votemaster.domain.usecase.profile.UserProfileUseCase
 import de.multiplebytes.votemaster.domain.usecase.vote.CreateVoteUseCase
 import de.multiplebytes.votemaster.domain.usecase.vote.VotesUseCase
 import de.multiplebytes.votemaster.presentation.feature.auth.AuthViewModel
 import de.multiplebytes.votemaster.presentation.feature.credit.CreditViewModel
+import de.multiplebytes.votemaster.presentation.feature.profile.ProfileViewModel
 import de.multiplebytes.votemaster.presentation.feature.vote.VoteViewModel
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
@@ -69,6 +71,7 @@ val appModule = module {
     factory { CreateVoteUseCase(get()) }
     factory { ProfilesUseCase(get()) }
     factory { SingleProfileUseCase(get()) }
+    factory { UserProfileUseCase(get()) }
 
     factory { CreditUseCase(get()) }
     factory { UpdateCreditUseCase(get()) }
@@ -76,4 +79,5 @@ val appModule = module {
     viewModelOf(::AuthViewModel)
     viewModelOf(::VoteViewModel)
     viewModelOf(::CreditViewModel)
+    viewModelOf(::ProfileViewModel)
 }
