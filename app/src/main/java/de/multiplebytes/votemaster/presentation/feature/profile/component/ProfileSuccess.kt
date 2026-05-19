@@ -4,11 +4,11 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.absolutePadding
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -29,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
@@ -69,27 +68,27 @@ fun ProfileSuccess(
         verticalArrangement = Arrangement.spacedBy(30.dp)
     ) {
         Box(
-            modifier = Modifier.width(240.dp),
+            modifier = Modifier
+                .width(240.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = CircleShape
+                ),
             contentAlignment = Alignment.TopEnd
         ) {
             SubcomposeAsyncImage(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
+                    .size(240.dp)
                     .graphicsLayer {
                         scaleX = scale.value
                         scaleY = scale.value
                     }
-                    .background(
+                    .border(
+                        width = 8.dp,
                         color = MaterialTheme.colorScheme.tertiary,
                         shape = CircleShape
                     )
-                    .padding(8.dp)
-                    .clip(CircleShape)
-                    .shadow(
-                        elevation = 1.dp,
-                        shape = CircleShape
-                    ),
+                    .clip(CircleShape),
                 model = profile.imageUrl,
                 contentDescription = profile.name,
                 contentScale = ContentScale.Crop
@@ -135,10 +134,17 @@ fun ProfileSuccess(
             )
 
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = MaterialTheme.colorScheme.surface,
+                        shape = MaterialTheme.shapes.large
+                    )
+                    .padding(16.dp),
                 text = profile.biography,
                 style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurface,
+                minLines = 5,
                 maxLines = 5
             )
         }
