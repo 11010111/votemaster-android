@@ -29,7 +29,9 @@ fun VoteScreen(
     onLike: (String) -> Unit
 ) {
     when (val currentState = uiState.voteStatus) {
-        is VoteStatus.Loading -> Loading(modifier = modifier)
+        is VoteStatus.Loading -> {
+            Loading(modifier = modifier)
+        }
 
         is VoteStatus.Success -> {
             if (currentState.profile != null) {
