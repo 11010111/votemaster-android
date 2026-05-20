@@ -74,18 +74,18 @@ fun VoteSuccess(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .graphicsLayer {
+                translationX = offsetX.value
+                rotationZ = rotation.value
+                scaleX = scale.value
+                scaleY = scale.value
+            },
         contentAlignment = Alignment.BottomStart
     ) {
         SubcomposeAsyncImage(
             modifier = Modifier
                 .fillMaxSize()
-                .graphicsLayer {
-                    translationX = offsetX.value
-                    rotationZ = rotation.value
-                    scaleX = scale.value
-                    scaleY = scale.value
-                }
                 .background(
                     color = MaterialTheme.colorScheme.surfaceContainer,
                     shape = MaterialTheme.shapes.extraLarge

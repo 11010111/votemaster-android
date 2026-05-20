@@ -99,7 +99,7 @@ fun ProfileSuccess(
                     .size(48.dp)
                     .offset(x = -(16.dp))
                     .background(
-                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.75f),
+                        color = MaterialTheme.colorScheme.background.copy(alpha = 0.75f),
                         shape = CircleShape
                     )
                     .clip(CircleShape),
@@ -115,6 +115,7 @@ fun ProfileSuccess(
                 Text(
                     text = "$credits",
                     style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Center,
                     maxLines = 1
                 )
@@ -123,7 +124,7 @@ fun ProfileSuccess(
 
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
