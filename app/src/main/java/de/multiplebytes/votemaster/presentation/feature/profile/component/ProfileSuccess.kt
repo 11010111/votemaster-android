@@ -4,21 +4,19 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.BrokenImage
 import androidx.compose.material.icons.rounded.LocalFireDepartment
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -69,35 +67,48 @@ fun ProfileSuccess(
     ) {
         Box(
             modifier = Modifier
-                .width(240.dp)
+                .size(240.dp)
                 .background(
-                    color = MaterialTheme.colorScheme.surface,
+                    color = MaterialTheme.colorScheme.tertiary,
                     shape = CircleShape
-                ),
+                )
+                .padding(10.dp)
+                .graphicsLayer {
+                    scaleX = scale.value
+                    scaleY = scale.value
+                },
             contentAlignment = Alignment.TopEnd
         ) {
             SubcomposeAsyncImage(
                 modifier = Modifier
                     .size(240.dp)
-                    .graphicsLayer {
-                        scaleX = scale.value
-                        scaleY = scale.value
-                    }
-                    .border(
-                        width = 8.dp,
-                        color = MaterialTheme.colorScheme.tertiary,
-                        shape = CircleShape
-                    )
                     .clip(CircleShape),
                 model = profile.imageUrl,
                 contentDescription = profile.name,
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                error = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                color = MaterialTheme.colorScheme.surface,
+                                shape = CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(48.dp),
+                            imageVector = Icons.Rounded.BrokenImage,
+                            contentDescription = "Failed to load image",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
             )
 
             Column(
                 modifier = Modifier
                     .size(48.dp)
-                    .offset(x = -(16.dp))
                     .background(
                         color = MaterialTheme.colorScheme.background.copy(alpha = 0.75f),
                         shape = CircleShape
