@@ -17,7 +17,7 @@ android {
     namespace = "de.multiplebytes.votemaster"
 
     compileSdk {
-        version = release(36) {
+        version = release(37) {
             minorApiLevel = 1
         }
     }
